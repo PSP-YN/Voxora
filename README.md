@@ -6,6 +6,10 @@ Voxora is a native Linux desktop application built with GTK 4 and libadwaita. It
 
 ![Voxora desktop application](assets/screenshot.png)
 
+## Brand assets
+
+The supplied Voxora logo is used in the desktop sidebar and installed application icon.
+
 ## Features
 
 - Zero-shot voice cloning from a short reference recording.

@@ -24,32 +24,39 @@ PROFILE_AUDIO = VOICES / "my_voice.wav"
 PROFILE_TEXT = VOICES / "my_voice.txt"
 
 CSS = """
-window { background: #f7f5ff; color: #241b38; }
-.main-header { background: #ffffff; border-bottom: 1px solid #e8e1f4; }
-.sidebar { background: #21182f; color: #f8f5ff; min-width: 224px; }
-.brand-title { color: #ffffff; font-size: 17px; font-weight: 800; }
-.brand-subtitle { color: #c2b5da; font-size: 10px; }
-.nav-button { color: #d6cce7; background: transparent; border: 0; border-radius: 10px; padding: 11px 13px; }
-.nav-button:hover { background: #38294f; color: #ffffff; }
-.nav-button.nav-active { background: #593a82; color: #ffffff; }
-.sidebar-caption { color: #a99abd; font-size: 10px; font-weight: 800; letter-spacing: 1px; }
-.sidebar-foot { color: #d0c6df; font-size: 11px; }
-.page-title { color: #241b38; font-size: 27px; font-weight: 800; }
-.page-subtitle { color: #766b88; font-size: 13px; }
-.section-title { color: #302342; font-size: 14px; font-weight: 750; }
-.muted { color: #786f88; font-size: 12px; }
-.card { background: #ffffff; border: 1px solid #e9e3f1; border-radius: 15px; padding: 17px; }
-button { color: #57317d; background: #f0e9fa; border: 1px solid #e3d8f0; border-radius: 9px; padding: 7px 10px; }
-button:hover { background: #e7dcf4; }
-dropdown, .language-picker { color: #302342; background: #ffffff; border: 1px solid #ded5eb; border-radius: 9px; padding: 4px; }
-.primary-action { background: #7042a5; color: #ffffff; border-radius: 10px; padding: 11px 20px; font-weight: 700; }
-.primary-action:hover { background: #5e348f; }
-.soft-action { background: #f0e9fa; color: #61388f; border-radius: 9px; }
-.entry-area { background: #ffffff; color: #241b38; border: 1px solid #ded5eb; border-radius: 10px; padding: 10px; }
-textview.entry-area { background: #ffffff; color: #241b38; }
-.pill { background: #eee5f8; color: #61388f; border-radius: 99px; padding: 5px 10px; font-size: 10px; font-weight: 800; }
-.status-text { color: #665b76; font-size: 12px; }
+window { background: #f6f7fb; color: #202238; }
+.main-header { background: #ffffff; border-bottom: 1px solid #e7e8f0; min-height: 58px; }
+.sidebar { background: #111827; color: #f8fafc; min-width: 246px; }
+.brand-title { color: #f8fafc; font-size: 14px; font-weight: 750; }
+.brand-subtitle { color: #a5b4c8; font-size: 10px; letter-spacing: .7px; }
+.brand-logo { border-radius: 16px; }
+.nav-button { color: #b9c3d4; background: transparent; border: 1px solid transparent; border-radius: 11px; padding: 12px 14px; min-height: 42px; font-weight: 600; }
+.nav-button:hover { background: #202b3e; color: #ffffff; }
+.nav-button.nav-active { background: #273a55; color: #ffffff; border-color: #3b587c; }
+.nav-button.nav-active image { color: #8be9ee; }
+.sidebar-caption { color: #8493a9; font-size: 10px; font-weight: 800; letter-spacing: 1.1px; }
+.sidebar-foot { color: #aebbd0; font-size: 11px; }
+.page-title { color: #171b2d; font-size: 29px; font-weight: 800; letter-spacing: -.6px; }
+.page-subtitle { color: #70798d; font-size: 13px; }
+.section-title { color: #252b40; font-size: 14px; font-weight: 750; }
+.muted { color: #778197; font-size: 12px; }
+.card { background: #ffffff; border: 1px solid #e4e7ef; border-radius: 17px; padding: 19px; }
+button { color: #34445f; background: #f4f6fa; border: 1px solid #e1e6ef; border-radius: 10px; padding: 8px 12px; min-height: 36px; font-weight: 600; }
+button:hover { background: #eaf0f8; border-color: #cbd5e3; }
+button:disabled { opacity: .48; }
+.primary-action { background: #5a55d6; color: #ffffff; border: 1px solid #5a55d6; border-radius: 11px; padding: 12px 20px; min-height: 42px; font-weight: 750; }
+.primary-action:hover { background: #4843bf; border-color: #4843bf; }
+.soft-action { background: #eef2ff; color: #4c50ba; border-color: #dfe4ff; border-radius: 10px; }
+.soft-action:hover { background: #e2e8ff; }
+dropdown, .language-picker { color: #252b40; background: #ffffff; border: 1px solid #dce1eb; border-radius: 10px; padding: 5px; min-height: 38px; }
+entry, textview.entry-area, .entry-area { background: #fbfcff; color: #20263a; border: 1px solid #dce2ec; border-radius: 11px; padding: 11px; }
+textview.entry-area text { background: transparent; color: #20263a; }
+.pill { background: #e8f8f8; color: #167c83; border: 1px solid #c9eeee; border-radius: 99px; padding: 5px 10px; font-size: 10px; font-weight: 800; }
+.status-text { color: #667187; font-size: 12px; }
 scrolledwindow { background: transparent; }
+separator { background: #e4e8f0; }
+checkbutton { color: #45516a; }
+spinner { color: #5a55d6; }
 """
 
 def label(text, css=None, wrap=True):
@@ -93,8 +100,8 @@ class VoiceStudio(Adw.Application):
     def build_window(self):
         self.window = Adw.ApplicationWindow(application=self)
         self.window.set_title("Voxora")
-        self.window.set_default_size(1240, 860)
-        self.window.set_size_request(980, 700)
+        self.window.set_default_size(1360, 900)
+        self.window.set_size_request(1040, 720)
         self.window.set_decorated(True)
 
         # Explicit native window controls: minimize, maximize/restore and close.
@@ -123,15 +130,15 @@ class VoiceStudio(Adw.Application):
         shell.append(sidebar)
 
         brand = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=11)
-        mark = Gtk.Box()
-        mark.add_css_class("pill")
-        mark.set_size_request(42, 42)
-        mark.set_valign(Gtk.Align.CENTER)
-        mark.append(Gtk.Image.new_from_icon_name("audio-speakers-symbolic"))
-        brand.append(mark)
-        brand_text = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=2)
-        brand_text.append(label("VOXORA", "brand-title"))
-        brand_text.append(label("PRIVATE  ·  ON-DEVICE AI", "brand-subtitle"))
+        logo = Gtk.Image.new_from_file(str(ROOT / "assets" / "voxora-logo.png"))
+        logo.set_pixel_size(68)
+        logo.set_valign(Gtk.Align.CENTER)
+        logo.add_css_class("brand-logo")
+        brand.append(logo)
+        brand_text = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=4)
+        brand_text.set_valign(Gtk.Align.CENTER)
+        brand_text.append(label("Private voice studio", "brand-title"))
+        brand_text.append(label("LOCAL  ·  PRIVATE  ·  YOURS", "brand-subtitle"))
         brand.append(brand_text)
         sidebar.append(brand)
         sidebar.append(Gtk.Separator(orientation=Gtk.Orientation.HORIZONTAL))
@@ -365,7 +372,7 @@ class VoiceStudio(Adw.Application):
         card.append(label("PRIVACY", "section-title"))
         card.append(label("Speech generation runs locally. The app sets Hugging Face and Transformers offline flags. No API key, account or cloud inference is used. Internet is only needed if you choose to update or download models.", "muted", True))
         card.append(label("MODEL LICENCES", "section-title"))
-        card.append(label("English F5-TTS: MIT. Hindi SPRINGLab F5-Hindi: CC BY 4.0. Kannada OpenBible: CC BY-SA 4.0. See MODEL-LICENSES.md before redistribution.", "muted", True))
+        card.append(label("English F5-TTS pretrained weights: CC BY-NC 4.0 (non-commercial use only). Hindi SPRINGLab F5-Hindi: CC BY 4.0. Kannada OpenBible: CC BY-SA 4.0. See MODEL-LICENSES.md before redistribution or commercial use.", "muted", True))
         page.append(card)
         return page
 

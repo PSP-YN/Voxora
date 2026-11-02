@@ -13,10 +13,15 @@ PYTHON_BIN=""
 for candidate in python3.12 python3.11; do if command -v "$candidate" >/dev/null 2>&1; then PYTHON_BIN="$(command -v "$candidate")"; break; fi; done
 if [[ -z "$PYTHON_BIN" ]]; then echo "Python 3.11 or 3.12 is required."; exit 1; fi
 if [[ ! -d .venv ]]; then "$PYTHON_BIN" -m venv .venv; fi
+if ! .venv/bin/python -m pip --version >/dev/null 2>&1; then .venv/bin/python -m ensurepip --upgrade; fi
 .venv/bin/python -m pip install --upgrade pip wheel
 .venv/bin/python -m pip install -r requirements.txt
-mkdir -p "$HOME/.local/share/applications" "$HOME/.local/share/icons/hicolor/scalable/apps"
-cp assets/voxora.svg "$HOME/.local/share/icons/hicolor/scalable/apps/com.pspyn.Voxora.svg"
+mkdir -p "$HOME/.local/share/applications"
+for size in 64 128 256 512; do
+  icon_dir="$HOME/.local/share/icons/hicolor/${size}x${size}/apps"
+  mkdir -p "$icon_dir"
+  install -m 0644 "assets/icons/voxora-${size}.png" "$icon_dir/com.pspyn.Voxora.png"
+done
 cat > "$HOME/.local/share/applications/voxora.desktop" <<DESKTOP
 [Desktop Entry]
 Version=1.0

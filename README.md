@@ -12,7 +12,11 @@ The supplied Voxora logo is used in the desktop sidebar and installed applicatio
 
 ## Features
 
-- Zero-shot voice cloning from a short reference recording.
+- Zero-shot voice cloning from reference recordings between 3 seconds and 1 hour (the F5-TTS model internally selects a clean representative segment of up to about 12 seconds).
+- Full-recording audio analysis (duration, sample rate, RMS/peak level, near-silence and clipping estimates), streamed in blocks.
+- Delivery presets (Natural, Professional, Formal, Conversational, Expressive) and supported controls for pace, voice adherence, prosody variation and output loudness.
+- Long scripts are split into model-sized batches by F5-TTS; there is no arbitrary 1,000-character UI limit. Practical output length remains constrained by RAM, VRAM, disk space and generation time.
+- GStreamer preview with real pause/resume from the current playback position.
 - English, Hindi and Kannada model options.
 - Import WAV, MP3, FLAC, OGG, M4A and AAC reference audio.
 - Record directly from the default microphone.
@@ -32,7 +36,7 @@ The current desktop shell uses GTK 4/libadwaita and is Linux-only. Windows and m
 ## Requirements
 
 - Python 3.11 or 3.12 for the inference environment.
-- GTK 4, libadwaita and PyGObject for the desktop UI.
+- GTK 4, libadwaita, PyGObject and GStreamer base/good plugins for the desktop UI and audio preview.
 - FFmpeg and ALSA utilities for audio conversion and microphone recording.
 - 8 GB RAM minimum; 16 GB or more recommended.
 - NVIDIA GPU with 6 GB VRAM recommended for faster generation. CPU inference works but can be substantially slower.
@@ -49,7 +53,7 @@ Clone the repository:
 
 The installer installs system libraries using your distribution's package manager, creates an isolated Python environment, installs F5-TTS, registers the desktop launcher and offers to download all three language models.
 
-To skip system package installation (only do this if GTK 4, libadwaita, PyGObject, FFmpeg and ALSA utilities are already installed):
+To skip system package installation (only do this if GTK 4, libadwaita, PyGObject, GStreamer, FFmpeg and ALSA utilities are already installed):
 
     ./install.sh --no-system-deps
 
@@ -73,13 +77,14 @@ Launch from your Applications menu as **Voxora**, or run:
 
 1. Open **Voxora**.
 2. Choose English, Hindi or Kannada.
-3. Import a clean 3–20 second recording or use **Record**. A 5–12 second sample is a useful starting point.
+3. Import a clean 3-second to 1-hour recording or use **Record**. F5-TTS uses a representative clean segment (up to about 12 seconds) for cloning; the full source is analyzed for audio-level statistics. A clean 5–12 second segment is still a useful starting point.
 4. Enter the exact words spoken in that recording. The transcript should be in the same language as the reference sample.
-5. Paste the text to generate.
-6. Select **Generate speech**. The first model load may take several minutes.
-7. Play the generated audio or open the exports section. WAV files are stored in the local outputs/ directory.
+5. Paste the text to generate. The editor has no fixed 1,000-character limit; long scripts are batched by F5-TTS.
+6. Select a delivery preset and tune pace, voice adherence, prosody variation and loudness. These map to actual F5-TTS inference parameters.
+7. Select **Generate speech**. The first model load may take several minutes; long scripts can take substantially longer.
+8. Use **Play preview / Pause preview / Resume preview** to control playback without restarting it. WAV files are stored in the local outputs/ directory.
 
-For best results, record one speaker in a quiet room, keep the microphone at a consistent distance, and avoid music or background speech. Only clone your own voice or a voice you have explicit permission to use.
+For best results, record one speaker in a quiet room, keep the microphone at a consistent distance, and avoid music or background speech. A long recording is analyzed in full for measurable signal statistics, but the current F5-TTS preprocessing stage still selects a representative segment of up to about 12 seconds for voice conditioning. It does not learn a complete speaker-diarized prosody profile from an hour of speech. The presets are parameter mappings, not guaranteed acting directions. Independent controls for emotion, exact intonation contours, accent, timbre and phoneme-level inflection require a model that explicitly supports those controls or a separate prosody-conditioning system. Only clone your own voice or a voice you have explicit permission to use.
 
 ## Privacy and network use
 

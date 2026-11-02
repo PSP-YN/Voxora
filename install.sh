@@ -3,10 +3,10 @@ set -eo pipefail
 APP_DIR="$(cd -- "$(dirname -- "$0")" && pwd)"
 cd "$APP_DIR"
 install_system_deps() {
-  if command -v dnf >/dev/null 2>&1; then sudo dnf install -y gtk4 libadwaita python3-gobject python3.12 ffmpeg alsa-utils desktop-file-utils
-  elif command -v apt-get >/dev/null 2>&1; then sudo apt-get update && sudo apt-get install -y python3-gi python3-venv gir1.2-gtk-4.0 gir1.2-adw-1 ffmpeg alsa-utils desktop-file-utils
-  elif command -v pacman >/dev/null 2>&1; then sudo pacman -S --needed gtk4 libadwaita python-gobject ffmpeg alsa-utils desktop-file-utils
-  else echo "Unsupported package manager. Install GTK4, libadwaita, PyGObject, FFmpeg and ALSA utilities manually."; exit 1; fi
+  if command -v dnf >/dev/null 2>&1; then sudo dnf install -y gtk4 libadwaita python3-gobject python3.12 ffmpeg alsa-utils gstreamer1-plugins-base gstreamer1-plugins-good desktop-file-utils
+  elif command -v apt-get >/dev/null 2>&1; then sudo apt-get update && sudo apt-get install -y python3-gi python3-venv gir1.2-gtk-4.0 gir1.2-adw-1 gir1.2-gstreamer-1.0 gstreamer1.0-plugins-base gstreamer1.0-plugins-good ffmpeg alsa-utils desktop-file-utils
+  elif command -v pacman >/dev/null 2>&1; then sudo pacman -S --needed gtk4 libadwaita python-gobject gst-plugins-base gst-plugins-good ffmpeg alsa-utils desktop-file-utils
+  else echo "Unsupported package manager. Install GTK4, libadwaita, PyGObject, GStreamer (base + good plugins), FFmpeg and ALSA utilities manually."; exit 1; fi
 }
 if [[ $# -eq 0 || "$1" != "--no-system-deps" ]]; then install_system_deps; fi
 PYTHON_BIN=""

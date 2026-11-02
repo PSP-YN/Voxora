@@ -50,3 +50,20 @@ def test_rejects_missing_reference_audio():
     result = run_request(base_request())
     assert result.returncode != 0
     assert "selected voice recording cannot be found" in result.stdout
+
+
+def test_reference_duration_accepts_three_seconds_to_one_hour():
+    import runpy
+    validate = runpy.run_path(str(BACKEND))["validate_reference_duration"]
+    validate(3.0)
+    validate(3600.0)
+
+
+def test_reference_duration_rejects_out_of_range():
+    import runpy
+    validate = runpy.run_path(str(BACKEND))["validate_reference_duration"]
+    import pytest
+    with pytest.raises(ValueError, match="3 seconds and 1 hour"):
+        validate(2.99)
+    with pytest.raises(ValueError, match="3 seconds and 1 hour"):
+        validate(3600.01)

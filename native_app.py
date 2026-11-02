@@ -10,7 +10,9 @@ os.environ["GRADIO_ANALYTICS_ENABLED"] = "False"
 import gi
 gi.require_version("Gtk", "4.0")
 gi.require_version("Adw", "1")
-from gi.repository import Gtk, Adw, Gio, GLib, Gdk
+gi.require_version("Gst", "1.0")
+from gi.repository import Gtk, Adw, Gio, GLib, Gdk, Gst
+Gst.init(None)
 
 ROOT = Path(__file__).resolve().parent
 BACKEND = ROOT / "native_backend.py"
@@ -94,6 +96,9 @@ class VoiceStudio(Adw.Application):
         self.recording = None
         self.recording_path = None
         self.preview = None
+        self.preview_source = None
+        self.preview_path = None
+        self.preview_state = "stopped"
         self.busy = False
 
     def do_activate(self):
@@ -305,10 +310,50 @@ class VoiceStudio(Adw.Application):
         script_scroll.set_vexpand(True)
         script_scroll.set_child(self.script)
         script_card.append(script_scroll)
-        self.script_count = label("58 / 1000", "muted", False)
+        self.script_count = label("58 characters", "muted", False)
         self.script_count.set_halign(Gtk.Align.END)
         script_card.append(self.script_count)
         self.script.get_buffer().connect("changed", self.update_script_count)
+
+        # Generation controls map to parameters genuinely supported by F5-TTS.
+        controls = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=12)
+        controls.add_css_class("card")
+        controls.set_margin_bottom(14)
+        controls.append(label("03  ·  Delivery & voice controls", "section-title", False))
+        controls.append(label("Presets adjust generation behaviour; they do not guarantee a specific emotion or accent.", "muted"))
+        preset_row = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=10)
+        preset_row.append(label("Delivery preset", "section-title", False))
+        self.style_preset = Gtk.DropDown.new_from_strings(["Natural", "Professional", "Formal", "Conversational", "Expressive"])
+        self.style_preset.set_selected(0)
+        self.style_preset.set_hexpand(True)
+        self.style_preset.connect("notify::selected", self.apply_style_preset)
+        preset_row.append(self.style_preset)
+        controls.append(preset_row)
+        slider_grid = Gtk.Grid()
+        slider_grid.set_column_spacing(18); slider_grid.set_row_spacing(10)
+        self.speed_scale = Gtk.Scale.new_with_range(Gtk.Orientation.HORIZONTAL, 0.70, 1.30, 0.05)
+        self.speed_scale.set_value(1.0); self.speed_scale.set_digits(2); self.speed_scale.set_hexpand(True)
+        self.speed_value = label("1.00×", "muted", False)
+        self.speed_scale.connect("value-changed", lambda w: self.speed_value.set_text(f"{w.get_value():.2f}×"))
+        slider_grid.attach(label("Pace / speed", "muted", False), 0, 0, 1, 1); slider_grid.attach(self.speed_scale, 1, 0, 1, 1); slider_grid.attach(self.speed_value, 2, 0, 1, 1)
+        self.guidance_scale = Gtk.Scale.new_with_range(Gtk.Orientation.HORIZONTAL, 1.0, 4.0, 0.1)
+        self.guidance_scale.set_value(2.0); self.guidance_scale.set_digits(1); self.guidance_scale.set_hexpand(True)
+        self.guidance_value = label("2.0", "muted", False)
+        self.guidance_scale.connect("value-changed", lambda w: self.guidance_value.set_text(f"{w.get_value():.1f}"))
+        slider_grid.attach(label("Voice adherence", "muted", False), 0, 1, 1, 1); slider_grid.attach(self.guidance_scale, 1, 1, 1, 1); slider_grid.attach(self.guidance_value, 2, 1, 1, 1)
+        self.variation_scale = Gtk.Scale.new_with_range(Gtk.Orientation.HORIZONTAL, -1.0, 1.0, 0.1)
+        self.variation_scale.set_value(-1.0); self.variation_scale.set_digits(1); self.variation_scale.set_hexpand(True)
+        self.variation_value = label("Auto", "muted", False)
+        self.variation_scale.connect("value-changed", lambda w: self.variation_value.set_text("Auto" if w.get_value() <= -0.95 else f"{w.get_value():.1f}"))
+        slider_grid.attach(label("Prosody variation", "muted", False), 0, 2, 1, 1); slider_grid.attach(self.variation_scale, 1, 2, 1, 1); slider_grid.attach(self.variation_value, 2, 2, 1, 1)
+        self.loudness_scale = Gtk.Scale.new_with_range(Gtk.Orientation.HORIZONTAL, 0.04, 0.20, 0.01)
+        self.loudness_scale.set_value(0.10); self.loudness_scale.set_digits(2); self.loudness_scale.set_hexpand(True)
+        self.loudness_value = label("0.10", "muted", False)
+        self.loudness_scale.connect("value-changed", lambda w: self.loudness_value.set_text(f"{w.get_value():.2f}"))
+        slider_grid.attach(label("Output loudness", "muted", False), 0, 3, 1, 1); slider_grid.attach(self.loudness_scale, 1, 3, 1, 1); slider_grid.attach(self.loudness_value, 2, 3, 1, 1)
+        controls.append(slider_grid)
+        controls.append(label("Rhythm, pauses and intonation are influenced by punctuation, sentence structure and the reference sample. Timbre and emotion are learned from the reference; F5-TTS does not expose separate direct controls for each trait.", "muted", True))
+        page.append(controls)
 
         footer = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=12)
         footer.add_css_class("footer-panel")
@@ -341,11 +386,25 @@ class VoiceStudio(Adw.Application):
         self.output_path = None
         return page
 
+    def apply_style_preset(self, *_):
+        # Conservative mappings: presets only adjust speed and sampling variation.
+        presets = {
+            0: (1.00, -1.0, 2.0),  # Natural
+            1: (0.96, -0.5, 2.2),  # Professional
+            2: (0.92, -0.7, 2.3),  # Formal
+            3: (1.04, -0.3, 1.9),  # Conversational
+            4: (1.00, 0.2, 1.8),   # Expressive
+        }
+        speed, variation, guidance = presets.get(self.style_preset.get_selected(), presets[0])
+        self.speed_scale.set_value(speed)
+        self.variation_scale.set_value(variation)
+        self.guidance_scale.set_value(guidance)
+
     def update_script_count(self, buffer):
         if not hasattr(self, "script_count"):
             return
         value = buffer.get_text(buffer.get_start_iter(), buffer.get_end_iter(), True)
-        self.script_count.set_text(f"{len(value)} / 1000")
+        self.script_count.set_text(f"{len(value):,} characters")
 
     def build_voice_page(self):
         page = self.page_shell()
@@ -469,7 +528,11 @@ class VoiceStudio(Adw.Application):
             self.set_status("Enter the text you want spoken."); return
         language = ["English", "Hindi", "Kannada"][self.language.get_selected()]
         payload = {"language": language, "text": script, "transcript": transcript,
-                   "reference_audio": self.reference_path, "save_profile": self.save_profile.get_active()}
+                   "reference_audio": self.reference_path, "save_profile": self.save_profile.get_active(),
+                   "settings": {"speed": self.speed_scale.get_value(),
+                                "guidance": self.guidance_scale.get_value(),
+                                "variation": self.variation_scale.get_value(),
+                                "loudness": self.loudness_scale.get_value()}}
         self.busy = True
         self.generate_button.set_sensitive(False)
         self.spinner.start()
@@ -507,18 +570,80 @@ class VoiceStudio(Adw.Application):
         self.generate_button.set_sensitive(True)
         self.spinner.stop()
         if result.get("stage") == "complete":
+            self.stop_preview_silently()
             self.output_path = result.get("output")
             self.play_button.set_sensitive(True); self.save_button.set_sensitive(True)
-            self.set_status("Speech generated successfully. Saved on this computer.")
+            analysis = result.get("reference_analysis", {})
+            if analysis:
+                self.set_status(f"Speech ready · reference {analysis.get('duration_seconds', 0):.0f}s · RMS {analysis.get('rms_dbfs', 'n/a')} dBFS · local")
+            else:
+                self.set_status("Speech generated successfully. Saved on this computer.")
             self.refresh_library()
         else:
             self.set_status("Could not generate speech: " + result.get("message", "Unknown error"))
         return GLib.SOURCE_REMOVE
 
+    def play_library_file(self, path):
+        self.stop_preview_silently()
+        self.output_path = str(path)
+        self.play_button.set_sensitive(True)
+        self.navigate(None, "create")
+        self.play_output()
+
     def play_output(self, *_):
-        if self.output_path and Path(self.output_path).exists():
-            subprocess.Popen(["ffplay", "-nodisp", "-autoexit", "-loglevel", "error", self.output_path],
-                             stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+        if not self.output_path or not Path(self.output_path).is_file():
+            self.set_status("Generate speech before playing a preview.")
+            return
+        if self.preview is None:
+            self.preview = Gst.ElementFactory.make("playbin", "voxora-preview")
+            if self.preview is None:
+                self.set_status("GStreamer playback is unavailable. Install GStreamer plugins.")
+                return
+            self.preview.set_property("uri", Path(self.output_path).resolve().as_uri())
+            bus = self.preview.get_bus()
+            bus.add_signal_watch()
+            bus.connect("message", self._on_preview_message)
+            self.preview_path = self.output_path
+        if self.preview_state == "playing":
+            self.preview_state = "paused"
+            self.preview.set_state(Gst.State.PAUSED)
+            self.play_button.set_label("Resume preview")
+            self.play_button.set_icon_name("media-playback-start-symbolic")
+            self.set_status("Preview paused. Resume continues from the same position.")
+        else:
+            self.preview_state = "playing"
+            self.preview.set_state(Gst.State.PLAYING)
+            self.play_button.set_label("Pause preview")
+            self.play_button.set_icon_name("media-playback-pause-symbolic")
+            self.set_status("Playing preview.")
+
+    def _on_preview_message(self, _bus, message):
+        if message.type == Gst.MessageType.EOS:
+            self.stop_preview_silently()
+            self.set_status("Preview finished.")
+        elif message.type == Gst.MessageType.ERROR:
+            err, debug = message.parse_error()
+            self.stop_preview_silently()
+            self.set_status(f"Audio playback error: {err.message}")
+
+    def _reset_preview_controls(self):
+        if hasattr(self, "play_button"):
+            self.play_button.set_label("Play preview")
+            self.play_button.set_icon_name("media-playback-start-symbolic")
+
+    def stop_preview_silently(self):
+        player = self.preview
+        self.preview = None
+        self.preview_state = "stopped"
+        if player is not None:
+            bus = player.get_bus()
+            if bus: bus.remove_signal_watch()
+            player.set_state(Gst.State.NULL)
+        self._reset_preview_controls()
+
+    def stop_preview(self):
+        self.stop_preview_silently()
+        self.set_status("Preview stopped.")
 
     def save_output(self, *_):
         if not self.output_path or not Path(self.output_path).is_file():
@@ -541,6 +666,12 @@ class VoiceStudio(Adw.Application):
                 except Exception as exc:
                     self.set_status(f"Could not save audio: {exc}")
         dialog.destroy()
+
+    def do_shutdown(self):
+        self.stop_preview_silently()
+        if self.recording and self.recording.poll() is None:
+            self.recording.terminate()
+        Adw.Application.do_shutdown(self)
 
     def reveal_output(self, *_):
         if self.output_path:
@@ -588,7 +719,7 @@ class VoiceStudio(Adw.Application):
             col.append(label(path.name, "section-title"))
             col.append(label(datetime.datetime.fromtimestamp(path.stat().st_mtime).strftime("%d %b %Y, %I:%M %p"), "muted"))
             row.append(col)
-            play = button("Play", "media-playback-start-symbolic"); play.connect("clicked", lambda _b,p=path: subprocess.Popen(["ffplay","-nodisp","-autoexit","-loglevel","error",str(p)],stdout=subprocess.DEVNULL,stderr=subprocess.DEVNULL)); row.append(play)
+            play = button("Play", "media-playback-start-symbolic"); play.connect("clicked", lambda _b,p=path: self.play_library_file(p)); row.append(play)
             reveal = button("Show", "folder-open-symbolic"); reveal.connect("clicked", lambda _b,p=path: subprocess.Popen(["xdg-open",str(p.parent)])); row.append(reveal)
             self.library_box.append(row)
 

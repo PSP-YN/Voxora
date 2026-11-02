@@ -17,6 +17,10 @@ The supplied Voxora logo is used in the desktop sidebar and installed applicatio
 - Delivery presets (Natural, Professional, Formal, Conversational, Expressive) and supported controls for pace, voice adherence, prosody variation and output loudness.
 - Long scripts are split into model-sized batches by F5-TTS; there is no arbitrary 1,000-character UI limit. Practical output length remains constrained by RAM, VRAM, disk space and generation time.
 - GStreamer preview with real pause/resume from the current playback position.
+- Speaker Intelligence profile: sampled pitch range/variability, energy, pause statistics, spectral brightness and rough transcript-based speaking-rate estimate.
+- Persistent local speaker profile (`voices/speaker_profile.json`) and generated-vs-reference acoustic metric comparisons saved beside WAV exports.
+- Sentence-level controls: insert pauses, mark emphasis, wrap selected text with speed or delivery tags; each sentence is synthesized separately and joined with short fades.
+- Mood presets (indirect model-dependent parameter mappings), emphasis strength and pitch shift (local post-processing).
 - English, Hindi and Kannada model options.
 - Import WAV, MP3, FLAC, OGG, M4A and AAC reference audio.
 - Record directly from the default microphone.
@@ -83,8 +87,19 @@ Launch from your Applications menu as **Voxora**, or run:
 6. Select a delivery preset and tune pace, voice adherence, prosody variation and loudness. These map to actual F5-TTS inference parameters.
 7. Select **Generate speech**. The first model load may take several minutes; long scripts can take substantially longer.
 8. Use **Play preview / Pause preview / Resume preview** to control playback without restarting it. WAV files are stored in the local outputs/ directory.
+9. Click **Analyze speaker profile** to measure the reference voice. The profile is persisted locally in `voices/speaker_profile.json`.
+10. Select script text and use **Emphasize selection**, **Selected text · slower**, or **Selected text · delivery**. **Insert 500 ms pause** adds a pause marker at the cursor.
 
-For best results, record one speaker in a quiet room, keep the microphone at a consistent distance, and avoid music or background speech. A long recording is analyzed in full for measurable signal statistics, but the current F5-TTS preprocessing stage still selects a representative segment of up to about 12 seconds for voice conditioning. It does not learn a complete speaker-diarized prosody profile from an hour of speech. The presets are parameter mappings, not guaranteed acting directions. Independent controls for emotion, exact intonation contours, accent, timbre and phoneme-level inflection require a model that explicitly supports those controls or a separate prosody-conditioning system. Only clone your own voice or a voice you have explicit permission to use.
+Script markup supported by the local worker:
+
+- `[pause:500ms]` or `[pause:1s]`
+- `[speed:0.9]slower phrase[/speed]`
+- `[delivery:formal]formal passage[/delivery]`
+- `[emphasis]important words[/emphasis]`
+
+The app synthesizes marked sentence segments separately and stitches them together. This can increase generation time and may produce slightly different prosody at sentence boundaries.
+
+For best results, record one speaker in a quiet room, keep the microphone at a consistent distance, and avoid music or background speech. A long recording is analyzed in full for measurable signal statistics, but the current F5-TTS preprocessing stage still selects a representative segment of up to about 12 seconds for voice conditioning. It does not learn a complete speaker-diarized prosody profile from an hour of speech. The presets are parameter mappings, not guaranteed acting directions. Independent controls for emotion, exact intonation contours, accent, timbre and phoneme-level inflection require a model that explicitly supports those controls or a separate prosody-conditioning system. The Mood preset is an indirect parameter approximation; pitch shifting is post-processing and may alter perceived timbre. Only clone your own voice or a voice you have explicit permission to use.
 
 ## Privacy and network use
 

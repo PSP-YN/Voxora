@@ -108,6 +108,18 @@ class VoiceStudio(Adw.Application):
         self.build_window()
         self.window.present()
         self.window.maximize()
+        saved_profile = VOICES / "speaker_profile.json"
+        if saved_profile.exists():
+            try:
+                self.render_speaker_analysis(json.loads(saved_profile.read_text(encoding="utf-8")))
+            except Exception:
+                pass
+        comparisons = sorted(OUTPUTS.glob("*.comparison.json"), key=lambda p:p.stat().st_mtime, reverse=True)
+        if comparisons:
+            try:
+                self.render_speaker_comparison(json.loads(comparisons[0].read_text(encoding="utf-8")))
+            except Exception:
+                pass
 
     def build_window(self):
         self.window = Adw.ApplicationWindow(application=self)
@@ -294,6 +306,15 @@ class VoiceStudio(Adw.Application):
         voice_card.append(wave)
         self.save_profile = Gtk.CheckButton(label="Save as default voice model")
         voice_card.append(self.save_profile)
+        analyze_row = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=8)
+        self.analyze_button = button("Analyze speaker profile", "view-statistics-symbolic")
+        self.analyze_button.connect("clicked", self.analyze_speaker_profile)
+        analyze_row.append(self.analyze_button)
+        voice_card.append(analyze_row)
+        self.speaker_analysis_label = label("Pitch, pause, speech-rate and vocal-signal analysis will appear here.", "muted", True)
+        voice_card.append(self.speaker_analysis_label)
+        self.speaker_comparison_label = label("Generated-vs-reference comparison appears after synthesis.", "muted", True)
+        voice_card.append(self.speaker_comparison_label)
 
         script_heading = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=10)
         script_heading.append(Gtk.Image.new_from_icon_name("text-x-generic-symbolic"))
@@ -310,6 +331,22 @@ class VoiceStudio(Adw.Application):
         script_scroll.set_vexpand(True)
         script_scroll.set_child(self.script)
         script_card.append(script_scroll)
+        script_tools = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=8)
+        pause_insert = button("Insert 500 ms pause", "media-playback-pause-symbolic")
+        pause_insert.connect("clicked", lambda *_: self.script.get_buffer().insert_at_cursor("[pause:500ms]"))
+        script_tools.append(pause_insert)
+        emphasis_insert = button("Emphasize selection", "format-text-bold-symbolic")
+        emphasis_insert.connect("clicked", self.wrap_script_selection_emphasis)
+        script_tools.append(emphasis_insert)
+        speed_insert = button("Selected text · slower", "speedometer-symbolic")
+        speed_insert.connect("clicked", self.wrap_script_selection_speed)
+        script_tools.append(speed_insert)
+        delivery_insert = button("Selected text · delivery", "text-formatting-symbolic")
+        delivery_insert.connect("clicked", self.wrap_script_selection_delivery)
+        script_tools.append(delivery_insert)
+        script_card.append(script_tools)
+        script_hint = label("Sentence-level tags: [pause:500ms] · [speed:0.9]…[/speed] · [delivery:formal]…[/delivery] · [emphasis]words[/emphasis]", "muted", True)
+        script_card.append(script_hint)
         self.script_count = label("58 characters", "muted", False)
         self.script_count.set_halign(Gtk.Align.END)
         script_card.append(self.script_count)
@@ -329,6 +366,13 @@ class VoiceStudio(Adw.Application):
         self.style_preset.connect("notify::selected", self.apply_style_preset)
         preset_row.append(self.style_preset)
         controls.append(preset_row)
+        mood_row = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=10)
+        mood_row.append(label("Emotional delivery (approximate)", "section-title", False))
+        self.mood_picker = Gtk.DropDown.new_from_strings(["Neutral", "Calm", "Upbeat", "Confident", "Warm", "Dramatic"])
+        self.mood_picker.set_selected(0)
+        self.mood_picker.set_hexpand(True)
+        mood_row.append(self.mood_picker)
+        controls.append(mood_row)
         slider_grid = Gtk.Grid()
         slider_grid.set_column_spacing(18); slider_grid.set_row_spacing(10)
         self.speed_scale = Gtk.Scale.new_with_range(Gtk.Orientation.HORIZONTAL, 0.70, 1.30, 0.05)
@@ -345,14 +389,24 @@ class VoiceStudio(Adw.Application):
         self.variation_scale.set_value(-1.0); self.variation_scale.set_digits(1); self.variation_scale.set_hexpand(True)
         self.variation_value = label("Auto", "muted", False)
         self.variation_scale.connect("value-changed", lambda w: self.variation_value.set_text("Auto" if w.get_value() <= -0.95 else f"{w.get_value():.1f}"))
-        slider_grid.attach(label("Prosody variation", "muted", False), 0, 2, 1, 1); slider_grid.attach(self.variation_scale, 1, 2, 1, 1); slider_grid.attach(self.variation_value, 2, 2, 1, 1)
+        slider_grid.attach(label("Rhythm / prosody variation", "muted", False), 0, 2, 1, 1); slider_grid.attach(self.variation_scale, 1, 2, 1, 1); slider_grid.attach(self.variation_value, 2, 2, 1, 1)
         self.loudness_scale = Gtk.Scale.new_with_range(Gtk.Orientation.HORIZONTAL, 0.04, 0.20, 0.01)
         self.loudness_scale.set_value(0.10); self.loudness_scale.set_digits(2); self.loudness_scale.set_hexpand(True)
         self.loudness_value = label("0.10", "muted", False)
         self.loudness_scale.connect("value-changed", lambda w: self.loudness_value.set_text(f"{w.get_value():.2f}"))
         slider_grid.attach(label("Output loudness", "muted", False), 0, 3, 1, 1); slider_grid.attach(self.loudness_scale, 1, 3, 1, 1); slider_grid.attach(self.loudness_value, 2, 3, 1, 1)
+        self.pitch_scale = Gtk.Scale.new_with_range(Gtk.Orientation.HORIZONTAL, -3.0, 3.0, 0.5)
+        self.pitch_scale.set_value(0.0); self.pitch_scale.set_digits(1); self.pitch_scale.set_hexpand(True)
+        self.pitch_value = label("0.0 st", "muted", False)
+        self.pitch_scale.connect("value-changed", lambda w: self.pitch_value.set_text(f"{w.get_value():+.1f} st"))
+        slider_grid.attach(label("Pitch / intonation shift", "muted", False), 0, 4, 1, 1); slider_grid.attach(self.pitch_scale, 1, 4, 1, 1); slider_grid.attach(self.pitch_value, 2, 4, 1, 1)
+        self.emphasis_scale = Gtk.Scale.new_with_range(Gtk.Orientation.HORIZONTAL, 0.0, 1.0, 0.1)
+        self.emphasis_scale.set_value(0.5); self.emphasis_scale.set_digits(1); self.emphasis_scale.set_hexpand(True)
+        self.emphasis_value = label("0.5", "muted", False)
+        self.emphasis_scale.connect("value-changed", lambda w: self.emphasis_value.set_text(f"{w.get_value():.1f}"))
+        slider_grid.attach(label("Marked emphasis strength", "muted", False), 0, 5, 1, 1); slider_grid.attach(self.emphasis_scale, 1, 5, 1, 1); slider_grid.attach(self.emphasis_value, 2, 5, 1, 1)
         controls.append(slider_grid)
-        controls.append(label("Rhythm, pauses and intonation are influenced by punctuation, sentence structure and the reference sample. Timbre and emotion are learned from the reference; F5-TTS does not expose separate direct controls for each trait.", "muted", True))
+        controls.append(label("Mood presets indirectly adjust pace and sampling (model-dependent, not guaranteed emotion). Pitch shift is post-processing and can alter perceived timbre. Pauses and emphasis tags operate sentence-by-sentence; this model cannot guarantee human-like acting.", "muted", True))
         page.append(controls)
 
         footer = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=12)
@@ -385,6 +439,56 @@ class VoiceStudio(Adw.Application):
 
         self.output_path = None
         return page
+
+    def wrap_script_selection_emphasis(self, *_):
+        buf = self.script.get_buffer()
+        bounds = buf.get_selection_bounds()
+        if not bounds:
+            self.set_status("Select text in the script first, then mark it for emphasis.")
+            return
+        start, end = bounds
+        selected = buf.get_text(start, end, True)
+        buf.delete(start, end)
+        buf.insert(start, f"[emphasis]{selected}[/emphasis]")
+
+    def wrap_script_selection_speed(self, *_):
+        buf = self.script.get_buffer()
+        bounds = buf.get_selection_bounds()
+        if not bounds:
+            self.set_status("Select a sentence or phrase first to adjust its pace.")
+            return
+        start, end = bounds
+        selected = buf.get_text(start, end, True)
+        buf.delete(start, end)
+        buf.insert(start, f"[speed:0.90]{selected}[/speed]")
+
+    def wrap_script_selection_delivery(self, *_):
+        buf = self.script.get_buffer()
+        bounds = buf.get_selection_bounds()
+        if not bounds:
+            self.set_status("Select a sentence or phrase first to set its delivery.")
+            return
+        choices = ["natural", "professional", "formal", "conversational", "expressive"]
+        selected_style = choices[self.style_preset.get_selected()]
+        start, end = bounds
+        selected = buf.get_text(start, end, True)
+        buf.delete(start, end)
+        buf.insert(start, f"[delivery:{selected_style}]{selected}[/delivery]")
+
+    def analyze_speaker_profile(self, *_):
+        if self.busy:
+            return
+        if not self.reference_path or not Path(self.reference_path).is_file():
+            self.set_status("Choose a reference recording before analyzing it.")
+            return
+        payload = {"action":"analyze", "language":"English", "text":"", "transcript":self.get_text(self.transcript),
+                   "reference_audio":self.reference_path, "save_profile":True}
+        self.busy=True
+        self.generate_button.set_sensitive(False)
+        self.analyze_button.set_sensitive(False)
+        self.spinner.start()
+        self.set_status("Analyzing reference voice profile…")
+        threading.Thread(target=self.run_backend, args=(payload,), daemon=True).start()
 
     def apply_style_preset(self, *_):
         # Conservative mappings: presets only adjust speed and sampling variation.
@@ -532,7 +636,10 @@ class VoiceStudio(Adw.Application):
                    "settings": {"speed": self.speed_scale.get_value(),
                                 "guidance": self.guidance_scale.get_value(),
                                 "variation": self.variation_scale.get_value(),
-                                "loudness": self.loudness_scale.get_value()}}
+                                "loudness": self.loudness_scale.get_value(),
+                                "mood": ["neutral","calm","upbeat","confident","warm","dramatic"][self.mood_picker.get_selected()],
+                                "pitch_shift": self.pitch_scale.get_value(),
+                                "emphasis_strength": self.emphasis_scale.get_value()}}
         self.busy = True
         self.generate_button.set_sensitive(False)
         self.spinner.start()
@@ -569,19 +676,59 @@ class VoiceStudio(Adw.Application):
         self.busy = False
         self.generate_button.set_sensitive(True)
         self.spinner.stop()
-        if result.get("stage") == "complete":
+        if hasattr(self, "analyze_button"):
+            self.analyze_button.set_sensitive(True)
+        if result.get("stage") == "complete" and result.get("analysis") and not result.get("output"):
+            self.render_speaker_analysis(result.get("analysis", {}))
+            self.set_status("Speaker profile analyzed and saved locally.")
+            self.refresh_profile()
+        elif result.get("stage") == "complete":
             self.stop_preview_silently()
             self.output_path = result.get("output")
             self.play_button.set_sensitive(True); self.save_button.set_sensitive(True)
             analysis = result.get("reference_analysis", {})
             if analysis:
-                self.set_status(f"Speech ready · reference {analysis.get('duration_seconds', 0):.0f}s · RMS {analysis.get('rms_dbfs', 'n/a')} dBFS · local")
+                self.render_speaker_analysis(analysis)
+                comp = result.get("comparison", {}).get("metrics", {})
+                pitch_delta = comp.get("pitch_median_hz", {}).get("difference")
+                rate_delta = comp.get("speech_rate_wpm_estimate", {}).get("difference")
+                compare_text = f" · pitch delta {pitch_delta:+.1f} Hz" if isinstance(pitch_delta, (int,float)) else ""
+                compare_text += f" · rate delta {rate_delta:+.1f} WPM" if isinstance(rate_delta, (int,float)) else ""
+                self.render_speaker_comparison(result.get("comparison", {}))
+                self.set_status(f"Speech ready · analyzed reference {analysis.get('duration_seconds', 0):.0f}s{compare_text}")
             else:
                 self.set_status("Speech generated successfully. Saved on this computer.")
             self.refresh_library()
         else:
             self.set_status("Could not generate speech: " + result.get("message", "Unknown error"))
         return GLib.SOURCE_REMOVE
+
+    def render_speaker_analysis(self, analysis):
+        if not hasattr(self, "speaker_analysis_label"):
+            return
+        def fmt(value, unit=""):
+            return f"{value}{unit}" if value is not None else "n/a"
+        self.speaker_analysis_label.set_text(
+            f"Speaker profile · {fmt(analysis.get('duration_seconds'), 's')} analyzed\n"
+            f"Pitch median: {fmt(analysis.get('pitch_median_hz'), ' Hz')} · range: {fmt(analysis.get('pitch_p05_hz'), '–')} {fmt(analysis.get('pitch_p95_hz'), ' Hz')}\n"
+            f"Pitch variation: {fmt(analysis.get('pitch_variability_hz_estimate'), ' Hz')} · intonation slope: {fmt(analysis.get('intonation_slope_hz_estimate'), ' Hz')} · rate: {fmt(analysis.get('speech_rate_wpm_estimate'), ' WPM')}\n"
+            f"Pauses: {fmt(analysis.get('pause_count_estimate'))} · median {fmt(analysis.get('pause_median_seconds_estimate'), 's')} · low-energy frames: {fmt(analysis.get('pause_frame_percent'), '%')}\n"
+            f"Energy emphasis ratio: {fmt(analysis.get('energy_emphasis_ratio_estimate'))} · RMS: {fmt(analysis.get('rms_dbfs'), ' dBFS')} · centroid: {fmt(analysis.get('spectral_centroid_median_hz'), ' Hz')}\n"
+            "These are acoustic estimates, not emotion/identity detection.")
+
+    def render_speaker_comparison(self, comparison):
+        if not hasattr(self, "speaker_comparison_label"):
+            return
+        metrics = comparison.get("metrics", {})
+        def delta(key, unit=""):
+            value = metrics.get(key, {}).get("difference")
+            return f"{value:+.1f}{unit}" if isinstance(value, (int, float)) else "n/a"
+        self.speaker_comparison_label.set_text(
+            "Generated audio vs reference (difference):\n"
+            f"Pitch median {delta('pitch_median_hz', ' Hz')} · pitch range {delta('pitch_range_hz_estimate', ' Hz')} · pitch variation {delta('pitch_variability_hz_estimate', ' Hz')}\n"
+            f"Estimated speaking rate {delta('speech_rate_wpm_estimate', ' WPM')} · pause/low-energy {delta('pause_frame_percent', '%')} · RMS {delta('rms_dbfs', ' dB')}\n"
+            f"Spectral centroid {delta('spectral_centroid_median_hz', ' Hz')}\n"
+            "Metric differences are not a speaker identity or quality score.")
 
     def play_library_file(self, path):
         self.stop_preview_silently()
@@ -695,7 +842,9 @@ class VoiceStudio(Adw.Application):
                 import wave
                 with wave.open(str(PROFILE_AUDIO), "rb") as w:
                     duration = w.getnframes() / float(w.getframerate())
-                self.profile_status.set_text(f"Saved recording: {PROFILE_AUDIO.name}  ·  {duration:.1f} seconds\nTranscript: {'available' if PROFILE_TEXT.exists() else 'missing'}")
+                profile_file = VOICES / "speaker_profile.json"
+                analyzed = "Speaker profile: analyzed" if profile_file.exists() else "Speaker profile: not analyzed yet"
+                self.profile_status.set_text(f"Saved recording: {PROFILE_AUDIO.name}  ·  {duration:.1f} seconds\nTranscript: {'available' if PROFILE_TEXT.exists() else 'missing'}\n{analyzed}")
             except Exception:
                 self.profile_status.set_text("Saved recording found.")
         else:

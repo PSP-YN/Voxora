@@ -1,0 +1,40 @@
+# Python and environments
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.env
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Downloaded model weights and Hugging Face cache
+models/*.safetensors
+models/*.pt
+models/*.bin
+models/*.ckpt
+models/.cache/
+.cache/
+
+# Private user data and generated media
+voices/
+outputs/
+logs/
+*.wav
+*.mp3
+*.flac
+*.ogg
+
+# Local build/editor files
+dist/
+build/
+*.egg-info/
+.DS_Store
+.idea/
+.vscode/
+*.bak*
+*.backup*
+
+# Downloaded tokenizer vocabularies
+models/f5_hindi_vocab.txt
+models/f5_kannada_vocab.txt

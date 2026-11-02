@@ -24,39 +24,46 @@ PROFILE_AUDIO = VOICES / "my_voice.wav"
 PROFILE_TEXT = VOICES / "my_voice.txt"
 
 CSS = """
-window { background: #f6f7fb; color: #202238; }
-.main-header { background: #ffffff; border-bottom: 1px solid #e7e8f0; min-height: 58px; }
-.sidebar { background: #111827; color: #f8fafc; min-width: 246px; }
-.brand-title { color: #f8fafc; font-size: 14px; font-weight: 750; }
-.brand-subtitle { color: #a5b4c8; font-size: 10px; letter-spacing: .7px; }
-.brand-logo { border-radius: 16px; }
-.nav-button { color: #b9c3d4; background: transparent; border: 1px solid transparent; border-radius: 11px; padding: 12px 14px; min-height: 42px; font-weight: 600; }
-.nav-button:hover { background: #202b3e; color: #ffffff; }
-.nav-button.nav-active { background: #273a55; color: #ffffff; border-color: #3b587c; }
-.nav-button.nav-active image { color: #8be9ee; }
-.sidebar-caption { color: #8493a9; font-size: 10px; font-weight: 800; letter-spacing: 1.1px; }
-.sidebar-foot { color: #aebbd0; font-size: 11px; }
-.page-title { color: #171b2d; font-size: 29px; font-weight: 800; letter-spacing: -.6px; }
-.page-subtitle { color: #70798d; font-size: 13px; }
-.section-title { color: #252b40; font-size: 14px; font-weight: 750; }
-.muted { color: #778197; font-size: 12px; }
-.card { background: #ffffff; border: 1px solid #e4e7ef; border-radius: 17px; padding: 19px; }
-button { color: #34445f; background: #f4f6fa; border: 1px solid #e1e6ef; border-radius: 10px; padding: 8px 12px; min-height: 36px; font-weight: 600; }
-button:hover { background: #eaf0f8; border-color: #cbd5e3; }
-button:disabled { opacity: .48; }
-.primary-action { background: #5a55d6; color: #ffffff; border: 1px solid #5a55d6; border-radius: 11px; padding: 12px 20px; min-height: 42px; font-weight: 750; }
-.primary-action:hover { background: #4843bf; border-color: #4843bf; }
-.soft-action { background: #eef2ff; color: #4c50ba; border-color: #dfe4ff; border-radius: 10px; }
-.soft-action:hover { background: #e2e8ff; }
-dropdown, .language-picker { color: #252b40; background: #ffffff; border: 1px solid #dce1eb; border-radius: 10px; padding: 5px; min-height: 38px; }
-entry, textview.entry-area, .entry-area { background: #fbfcff; color: #20263a; border: 1px solid #dce2ec; border-radius: 11px; padding: 11px; }
-textview.entry-area text { background: transparent; color: #20263a; }
-.pill { background: #e8f8f8; color: #167c83; border: 1px solid #c9eeee; border-radius: 99px; padding: 5px 10px; font-size: 10px; font-weight: 800; }
-.status-text { color: #667187; font-size: 12px; }
+window, window.background { background: #161B22; color: #F0F3F6; }
+.main-header { background: #0D1117; border-bottom: 1px solid #30363D; min-height: 52px; }
+.main-header button { color: #C9D1D9; }
+.sidebar { background: #0D1117; color: #F0F3F6; min-width: 252px; border-right: 1px solid #30363D; padding: 0 2px; }
+.brand-title { color: #F0F3F6; font-size: 15px; font-weight: 750; }
+.brand-subtitle { color: #8B949E; font-size: 10px; letter-spacing: 1.1px; font-weight: 750; }
+.brand-logo { border-radius: 8px; }
+.nav-button { color: #AAB4BF; background: transparent; border: 1px solid transparent; border-radius: 8px; padding: 12px 14px; min-height: 44px; font-weight: 600; }
+.nav-button:hover { background: #1C252D; color: #F0F3F6; }
+.nav-button.nav-active { background: #0F5A47; color: #FFFFFF; border-color: #16765C; }
+.nav-button.nav-active image { color: #FFFFFF; }
+.sidebar-caption { color: #8B949E; font-size: 10px; font-weight: 800; letter-spacing: 1.2px; }
+.sidebar-foot { color: #AAB4BF; font-size: 11px; }
+.page-title { color: #F0F3F6; font-size: 30px; font-weight: 800; letter-spacing: -.6px; }
+.page-subtitle { color: #AAB4BF; font-size: 13px; }
+.section-title { color: #F0F3F6; font-size: 15px; font-weight: 750; }
+.muted { color: #8B949E; font-size: 12px; }
+.card { background: #161B22; border: 1px solid #30363D; border-radius: 8px; padding: 18px; }
+button { color: #D0D7DE; background: #212830; border: 1px solid #30363D; border-radius: 8px; padding: 9px 13px; min-height: 38px; font-weight: 650; }
+button:hover { background: #28333D; border-color: #46535F; }
+button:disabled { opacity: .42; }
+.primary-action { background: #15803D; color: #FFFFFF; border: 1px solid #15803D; border-radius: 8px; padding: 11px 19px; min-height: 44px; font-weight: 750; }
+.primary-action:hover { background: #166534; border-color: #166534; }
+.upload-action { background: #10B981; color: #052E25; border: 1px solid #10B981; border-radius: 8px; padding: 11px 15px; min-height: 44px; font-weight: 750; }
+.upload-action:hover { background: #34D399; }
+.record-action { background: #0F766E; color: #FFFFFF; border: 1px solid #0F766E; border-radius: 8px; padding: 11px 15px; min-height: 44px; font-weight: 750; }
+.record-action:hover { background: #115E59; }
+.soft-action { background: #212830; color: #D0D7DE; border-color: #30363D; }
+.language-picker { color: #F0F3F6; background: #212830; border: 1px solid #30363D; border-radius: 8px; padding: 5px; min-height: 42px; }
+entry, textview.entry-area { background: #0D1117; color: #F0F3F6; border: 1px solid #30363D; border-radius: 8px; padding: 11px; }
+textview.entry-area text { background: #0D1117; color: #F0F3F6; }
+.pill { background: #043422; color: #51CF66; border: 1px solid #0F5A47; border-radius: 99px; padding: 6px 12px; font-size: 10px; font-weight: 800; letter-spacing: .4px; }
+.status-text { color: #AAB4BF; font-size: 12px; }
+.wave-bar { background: #10B981; border-radius: 3px; min-width: 3px; }
+.wave-muted { background: #48525D; border-radius: 3px; min-width: 3px; }
+.footer-panel { background: #1C252D; border: 1px solid #30363D; border-radius: 8px; padding: 12px 16px; }
 scrolledwindow { background: transparent; }
-separator { background: #e4e8f0; }
-checkbutton { color: #45516a; }
-spinner { color: #5a55d6; }
+separator { background: #30363D; }
+checkbutton { color: #C9D1D9; }
+spinner { color: #10B981; }
 """
 
 def label(text, css=None, wrap=True):
@@ -129,17 +136,15 @@ class VoiceStudio(Adw.Application):
         sidebar.set_margin_start(15); sidebar.set_margin_end(15)
         shell.append(sidebar)
 
-        brand = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=11)
+        brand = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=8)
+        brand.set_halign(Gtk.Align.CENTER)
+        brand.set_margin_top(4)
         logo = Gtk.Image.new_from_file(str(ROOT / "assets" / "voxora-logo.png"))
-        logo.set_pixel_size(68)
-        logo.set_valign(Gtk.Align.CENTER)
+        logo.set_pixel_size(158)
+        logo.set_halign(Gtk.Align.CENTER)
         logo.add_css_class("brand-logo")
         brand.append(logo)
-        brand_text = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=4)
-        brand_text.set_valign(Gtk.Align.CENTER)
-        brand_text.append(label("Private voice studio", "brand-title"))
-        brand_text.append(label("LOCAL  ·  PRIVATE  ·  YOURS", "brand-subtitle"))
-        brand.append(brand_text)
+        brand.append(label("LOCAL VOICE STUDIO", "brand-subtitle", False))
         sidebar.append(brand)
         sidebar.append(Gtk.Separator(orientation=Gtk.Orientation.HORIZONTAL))
         sidebar.append(label("WORKSPACE", "sidebar-caption"))
@@ -147,9 +152,9 @@ class VoiceStudio(Adw.Application):
         self.nav_buttons = {}
         nav_items = [
             ("create", "Create speech", "document-new-symbolic"),
-            ("voice", "My voice", "audio-input-microphone-symbolic"),
-            ("library", "Your exports", "folder-music-symbolic"),
-            ("settings", "Models & settings", "preferences-system-symbolic"),
+            ("voice", "My voices", "audio-input-microphone-symbolic"),
+            ("library", "Exports & history", "folder-music-symbolic"),
+            ("settings", "System Settings", "preferences-system-symbolic"),
         ]
         for key, title, icon in nav_items:
             b = button(title, icon, "nav-button")
@@ -164,8 +169,7 @@ class VoiceStudio(Adw.Application):
         spacer.set_vexpand(True)
         sidebar.append(spacer)
         sidebar.append(Gtk.Separator(orientation=Gtk.Orientation.HORIZONTAL))
-        sidebar.append(label("YOUR AUDIO STAYS HERE", "sidebar-caption"))
-        sidebar.append(label("No cloud inference\nNo API keys\nNo account required", "sidebar-foot", True))
+        sidebar.append(label("◆  Your audio stays local  •  Secure & private", "sidebar-foot", True))
 
         self.stack = Gtk.Stack()
         self.stack.set_transition_type(Gtk.StackTransitionType.CROSSFADE)
@@ -198,132 +202,154 @@ class VoiceStudio(Adw.Application):
 
     def build_create_page(self):
         page = self.page_shell()
-        self.page_heading("Create your voiceover", "Turn text into natural speech using a short recording of your voice.", page)
-        top = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=10)
-        top.set_margin_top(18)
-        top.append(label("NEW GENERATION", "sidebar-caption", False))
-        spacer = Gtk.Box(); spacer.set_hexpand(True); top.append(spacer)
-        top.append(label("LOCAL PROCESSING", "pill", False))
-        page.append(top)
+        page.set_margin_top(24)
+        page.set_margin_bottom(20)
+        page.set_margin_start(26)
+        page.set_margin_end(26)
 
-        language_card = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=9)
+        heading = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=16)
+        heading.set_valign(Gtk.Align.CENTER)
+        heading.set_margin_bottom(20)
+        title_col = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=5)
+        title_col.set_hexpand(True)
+        self.page_heading("Create voiceover", "Turn text into natural speech using a short voice recording.", title_col)
+        heading.append(title_col)
+        heading.append(label("✓  LOCAL PROCESSING ONLY", "pill", False))
+        page.append(heading)
+
+        language_card = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=8)
         language_card.add_css_class("card")
-        language_card.append(label("Output language", "section-title"))
+        language_card.set_margin_bottom(18)
         self.language = Gtk.DropDown.new_from_strings(["English", "Hindi", "Kannada"])
         self.language.set_selected(0)
-        self.language.set_size_request(-1, 40)
+        self.language.set_size_request(-1, 42)
         self.language.set_hexpand(True)
-        self.language.set_visible(True)
         self.language.add_css_class("language-picker")
-        language_card.append(self.language)
-        language_card.append(label("Choose the language you want your cloned voice to speak.", "muted"))
+        language_row = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=12)
+        language_row.append(label("Output language", "section-title", False))
+        language_row.append(self.language)
+        language_card.append(language_row)
+        language_card.append(label("Select the target language for your cloned voice.", "muted"))
         page.append(language_card)
 
         body = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=16)
-        body.set_margin_top(14)
         body.set_vexpand(True)
+        body.set_homogeneous(True)
+        body.set_margin_bottom(16)
         page.append(body)
 
-        left = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=12)
-        left.set_hexpand(True); left.set_vexpand(True)
-        right = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=12)
-        right.set_hexpand(True); right.set_vexpand(True)
-        body.append(left); body.append(right)
-
-        voice_card = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=10)
+        voice_card = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=12)
         voice_card.add_css_class("card")
-        voice_card.append(label("01  ·  YOUR VOICE SAMPLE", "section-title"))
-        voice_card.append(label("Use a clean 5–12 second recording. A transcript is required for accurate cloning.", "muted", True))
-        self.ref_label = label(self.reference_path or "No recording selected", "status-text", True)
-        voice_card.append(self.ref_label)
-        actions = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=8)
+        voice_card.set_hexpand(True)
+        voice_card.set_vexpand(True)
+        script_card = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=12)
+        script_card.add_css_class("card")
+        script_card.set_hexpand(True)
+        script_card.set_vexpand(True)
+        body.append(voice_card)
+        body.append(script_card)
+
+        voice_heading = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=10)
+        voice_heading.append(Gtk.Image.new_from_icon_name("audio-input-microphone-symbolic"))
+        voice_heading.append(label("01  ·  Reference Voice", "section-title", False))
+        voice_card.append(voice_heading)
+        actions = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=10)
         actions.set_homogeneous(True)
-        upload = button("Choose audio", "document-open-symbolic", "soft-action")
+        upload = button("Choose audio file", "document-open-symbolic", "upload-action")
         upload.connect("clicked", self.choose_audio)
         actions.append(upload)
-        self.record_button = button("Record", "media-record-symbolic")
-        self.record_button.set_visible(True)
-        self.record_button.set_hexpand(False)
-        self.record_button.add_css_class("soft-action")
+        self.record_button = button("Record now", "audio-input-microphone-symbolic", "record-action")
         self.record_button.connect("clicked", self.toggle_recording)
         actions.append(self.record_button)
         voice_card.append(actions)
-        voice_card.append(label("Recording transcript", "section-title"))
+        self.ref_label = label(Path(self.reference_path).name if self.reference_path else "No reference audio selected", "muted", True)
+        voice_card.append(self.ref_label)
+        voice_card.append(Gtk.Separator())
+        voice_card.append(label("Recording transcript", "section-title", False))
         self.transcript = Gtk.TextView()
         self.transcript.set_wrap_mode(Gtk.WrapMode.WORD_CHAR)
-        self.transcript.set_size_request(-1, 86)
+        self.transcript.set_size_request(-1, 70)
         self.transcript.add_css_class("entry-area")
         self.transcript.get_buffer().set_text(PROFILE_TEXT.read_text(encoding="utf-8") if PROFILE_TEXT.exists() else "")
         transcript_scroll = Gtk.ScrolledWindow()
-        transcript_scroll.set_min_content_height(82); transcript_scroll.set_child(self.transcript)
+        transcript_scroll.set_min_content_height(72)
+        transcript_scroll.set_child(self.transcript)
         voice_card.append(transcript_scroll)
-        self.save_profile = Gtk.CheckButton(label="Save this as my default voice")
+        wave = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=3)
+        wave.set_halign(Gtk.Align.FILL)
+        wave.set_margin_top(4)
+        heights = [7,12,19,10,25,15,32,18,12,24,38,17,27,13,20,34,15,24,11,18,30,14,23,12,17,27,9,14,21,11,6]
+        for h in heights:
+            bar = Gtk.Box()
+            bar.add_css_class("wave-bar")
+            bar.set_size_request(3,h)
+            bar.set_valign(Gtk.Align.CENTER)
+            bar.set_hexpand(True)
+            wave.append(bar)
+        voice_card.append(wave)
+        self.save_profile = Gtk.CheckButton(label="Save as default voice model")
         voice_card.append(self.save_profile)
-        left.append(voice_card)
 
-        tips_card = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=8)
-        tips_card.add_css_class("card")
-        tips_card.append(label("RECORDING TIPS", "section-title", False))
-        tips_card.append(label("Record in a quiet room and keep the microphone at a steady distance.", "muted", True))
-        tips_card.append(label("Use one speaker, avoid music and background voices, and speak naturally.", "muted", True))
-        tips_card.append(label("Write the exact words from your reference recording in the transcript box.", "muted", True))
-        left.append(tips_card)
-
-        text_card = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=10)
-        text_card.add_css_class("card")
-        text_card.append(label("02  ·  WHAT SHOULD I SAY?", "section-title"))
-        text_card.append(label("Paste the words you want spoken. Use the selected language.", "muted", True))
+        script_heading = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=10)
+        script_heading.append(Gtk.Image.new_from_icon_name("text-x-generic-symbolic"))
+        script_heading.append(label("02  ·  Script to generate", "section-title", False))
+        script_card.append(script_heading)
         self.script = Gtk.TextView()
         self.script.set_wrap_mode(Gtk.WrapMode.WORD_CHAR)
         self.script.set_vexpand(True)
-        self.script.set_size_request(-1, 210)
+        self.script.set_size_request(-1, 280)
         self.script.add_css_class("entry-area")
-        self.script.get_buffer().set_text("")
+        self.script.get_buffer().set_text("This is a test of the Local Voice Studio desktop application.")
         script_scroll = Gtk.ScrolledWindow()
-        script_scroll.set_min_content_height(220)
+        script_scroll.set_min_content_height(280)
         script_scroll.set_vexpand(True)
         script_scroll.set_child(self.script)
-        text_card.append(script_scroll)
-        right.append(text_card)
+        script_card.append(script_scroll)
+        self.script_count = label("58 / 1000", "muted", False)
+        self.script_count.set_halign(Gtk.Align.END)
+        script_card.append(self.script_count)
+        self.script.get_buffer().connect("changed", self.update_script_count)
 
-        bottom = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=12)
-        bottom.set_margin_top(14)
+        footer = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=12)
+        footer.add_css_class("footer-panel")
+        footer.set_valign(Gtk.Align.CENTER)
+        footer.append(label("Generated Audio", "section-title", False))
+        audio_wave = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=3)
+        audio_wave.set_hexpand(True)
+        audio_wave.set_halign(Gtk.Align.START)
+        for h in [8,13,19,11,25,16,30,20,12,23,16,28,12,19,9,14,21,11,7]:
+            bar=Gtk.Box(); bar.add_css_class("wave-muted"); bar.set_size_request(3,h); bar.set_valign(Gtk.Align.CENTER); audio_wave.append(bar)
+        footer.append(audio_wave)
         self.spinner = Gtk.Spinner()
-        bottom.append(self.spinner)
-        self.status = label("Ready. Your models run entirely on this computer.", "status-text", True)
-        self.status.set_hexpand(True)
-        bottom.append(self.status)
+        footer.append(self.spinner)
+        self.status = label("Ready", "status-text", True)
+        self.status.set_max_width_chars(28)
+        footer.append(self.status)
         self.generate_button = button("Generate speech", "media-playback-start-symbolic", "primary-action")
         self.generate_button.connect("clicked", self.generate)
-        bottom.append(self.generate_button)
-        page.append(bottom)
-
-        output_card = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=12)
-        output_card.add_css_class("card")
-        output_card.set_margin_top(12)
-        out_icon = Gtk.Image.new_from_icon_name("audio-x-generic-symbolic")
-        output_card.append(out_icon)
-        output_col = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=3)
-        output_col.set_hexpand(True)
-        output_col.append(label("Your generated audio", "section-title"))
-        self.output_label = label("Your WAV file will appear here after generation.", "muted")
-        output_col.append(self.output_label)
-        output_card.append(output_col)
-        self.play_button = button("Play", "media-playback-start-symbolic")
+        footer.append(self.generate_button)
+        self.play_button = button("Play preview", "media-playback-start-symbolic")
         self.play_button.set_sensitive(False)
         self.play_button.connect("clicked", self.play_output)
-        output_card.append(self.play_button)
-        self.save_button = button("Show file", "folder-open-symbolic")
+        footer.append(self.play_button)
+        self.save_button = button("Save file", "document-save-symbolic")
         self.save_button.set_sensitive(False)
-        self.save_button.connect("clicked", self.reveal_output)
-        output_card.append(self.save_button)
-        page.append(output_card)
+        self.save_button.connect("clicked", self.save_output)
+        footer.append(self.save_button)
+        page.append(footer)
+
         self.output_path = None
         return page
 
+    def update_script_count(self, buffer):
+        if not hasattr(self, "script_count"):
+            return
+        value = buffer.get_text(buffer.get_start_iter(), buffer.get_end_iter(), True)
+        self.script_count.set_text(f"{len(value)} / 1000")
+
     def build_voice_page(self):
         page = self.page_shell()
-        self.page_heading("My voice", "Manage the recording and transcript used as your default voice profile.", page)
+        self.page_heading("My voices", "Manage the recording and transcript used as your default voice profile.", page)
         card = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=12)
         card.add_css_class("card"); card.set_margin_top(22)
         card.append(label("DEFAULT VOICE PROFILE", "section-title"))
@@ -344,7 +370,7 @@ class VoiceStudio(Adw.Application):
 
     def build_library_page(self):
         page = self.page_shell()
-        self.page_heading("Your exports", "Audio generated on this device. Nothing is uploaded.", page)
+        self.page_heading("Exports & history", "Audio generated on this device. Nothing is uploaded.", page)
         self.library_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=9)
         self.library_box.set_margin_top(22)
         page.append(self.library_box)
@@ -353,7 +379,7 @@ class VoiceStudio(Adw.Application):
 
     def build_settings_page(self):
         page = self.page_shell()
-        self.page_heading("Models & settings", "Local models, privacy and application information.", page)
+        self.page_heading("System Settings", "Local models, privacy and application information.", page)
         card = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=14)
         card.add_css_class("card"); card.set_margin_top(22)
         card.append(label("INSTALLED SPEECH MODELS", "section-title"))
@@ -482,7 +508,6 @@ class VoiceStudio(Adw.Application):
         self.spinner.stop()
         if result.get("stage") == "complete":
             self.output_path = result.get("output")
-            self.output_label.set_text(Path(self.output_path).name)
             self.play_button.set_sensitive(True); self.save_button.set_sensitive(True)
             self.set_status("Speech generated successfully. Saved on this computer.")
             self.refresh_library()
@@ -494,6 +519,28 @@ class VoiceStudio(Adw.Application):
         if self.output_path and Path(self.output_path).exists():
             subprocess.Popen(["ffplay", "-nodisp", "-autoexit", "-loglevel", "error", self.output_path],
                              stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+
+    def save_output(self, *_):
+        if not self.output_path or not Path(self.output_path).is_file():
+            self.set_status("Generate speech before saving an audio file.")
+            return
+        dialog = Gtk.FileChooserNative.new(
+            "Save generated audio", self.window, Gtk.FileChooserAction.SAVE,
+            "Save file", "Cancel")
+        dialog.set_current_name(Path(self.output_path).name)
+        dialog.connect("response", self.on_output_save_response)
+        dialog.show()
+
+    def on_output_save_response(self, dialog, response):
+        if response == Gtk.ResponseType.ACCEPT:
+            target = dialog.get_file()
+            if target:
+                try:
+                    shutil.copy2(self.output_path, target.get_path())
+                    self.set_status("Audio file saved successfully.")
+                except Exception as exc:
+                    self.set_status(f"Could not save audio: {exc}")
+        dialog.destroy()
 
     def reveal_output(self, *_):
         if self.output_path:

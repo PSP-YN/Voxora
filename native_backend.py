@@ -20,40 +20,11 @@ def emit(**payload):
     print(json.dumps(payload, ensure_ascii=False), flush=True)
 
 def load_model(language):
-    import torch
-    from f5_tts.api import F5TTS
-    device = "cuda" if torch.cuda.is_available() else "cpu"
-    if language == "English":
-        return F5TTS(model="F5TTS_v1_Base", device=device)
-    if language == "Hindi":
-        return F5TTS(model="F5TTS_Small",
-                     ckpt_file=str(MODELS / "f5_hindi_small.safetensors"),
-                     vocab_file=str(MODELS / "f5_hindi_vocab.txt"), device=device)
-    if language == "Kannada":
-        import shutil as _shutil
-        from importlib.resources import files
-        config_dir = Path(files("f5_tts").joinpath("api.py")).resolve().parent / "configs"
-        custom = config_dir / "F5TTS_OpenBible_Kannada.yaml"
-        supplied = MODELS / "F5TTS_OpenBible_Kannada.yaml"
-        if not custom.exists() or custom.read_bytes() != supplied.read_bytes():
-            _shutil.copy2(supplied, custom)
-        checkpoint = MODELS / "f5_kannada_ema.safetensors"
-        if not checkpoint.exists():
-            checkpoint = MODELS / "f5_kannada_model_last.pt"
-        if not checkpoint.exists():
-            raise FileNotFoundError("Kannada model is missing. Run: .venv/bin/python download_models.py --languages Kannada")
-        try:
-            return F5TTS(model="F5TTS_OpenBible_Kannada",
-                         ckpt_file=str(checkpoint),
-                         vocab_file=str(MODELS / "f5_kannada_vocab.txt"), device=device)
-        except RuntimeError as exc:
-            if device != "cuda" or ("out of memory" not in str(exc).lower() and "cuda" not in str(exc).lower()):
-                raise
-            torch.cuda.empty_cache()
-            return F5TTS(model="F5TTS_OpenBible_Kannada",
-                         ckpt_file=str(checkpoint),
-                         vocab_file=str(MODELS / "f5_kannada_vocab.txt"), device="cpu")
-    raise ValueError("Unsupported language: " + str(language))
+    """Compatibility shim; model-specific loading lives in model_adapters."""
+    from model_adapters import adapter_for_language
+    adapter = adapter_for_language(language)
+    return adapter.load(language)
+
 
 def validate_reference_duration(duration):
     if duration < 3 or duration > 3600:
@@ -186,7 +157,9 @@ def main():
             shutil.copy2(ref_audio, VOICES / "my_voice.wav")
             (VOICES / "my_voice.txt").write_text(transcript, encoding="utf-8")
         emit(stage="loading", message=f"Loading the {language} model on this computer…")
-        model = load_model(language)
+        from model_adapters import adapter_for_language
+        adapter = adapter_for_language(language)
+        model = adapter.load(language)
         out = OUTPUTS / f"voice_{datetime.datetime.now().strftime('%Y%m%d_%H%M%S')}.wav"
         emit(stage="generating", message="Generating sentence-aware speech locally…")
         import numpy as np
@@ -217,11 +190,12 @@ def main():
                 segment_speed = max(.70, min(1.30, float(segment.get("speed", speed)) * mood_speed))
                 segment_cfg = min(4.0, delivery_cfg + (emphasis_strength if segment.get("emphasis") else 0.0))
                 emit(stage="generating", message=f"Synthesizing sentence {idx}/{len(segments)} ({delivery}{' · emphasis' if segment.get('emphasis') else ''})…")
-                wav, seg_sr, _ = model.infer(ref_file=str(ref_audio), ref_text=transcript,
-                                             gen_text=segment["text"], file_wave=None, remove_silence=False,
-                                             speed=segment_speed, cfg_strength=segment_cfg,
-                                             nfe_step=nfe_step,
-                                             sway_sampling_coef=(mood_sway if mood != "neutral" and sway <= -0.95 else sway), target_rms=target_rms)
+                wav, seg_sr, _ = adapter.synthesize(model,
+                    reference_audio=str(ref_audio), reference_text=transcript,
+                    text=segment["text"], settings={"speed": segment_speed,
+                    "cfg_strength": segment_cfg, "nfe_step": nfe_step,
+                    "sway_sampling_coef": (mood_sway if mood != "neutral" and sway <= -0.95 else sway),
+                    "target_rms": target_rms})
                 sr = int(seg_sr)
                 audio = np.asarray(wav, dtype=np.float32).reshape(-1)
                 # Pitch offset changes the generated segment's baseline. Sentence

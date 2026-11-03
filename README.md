@@ -146,3 +146,17 @@ This removes the desktop launcher and icon only. It intentionally leaves your mo
 ## Licence
 
 The Voxora application code is MIT-licensed. Third-party model weights have separate licences and attribution requirements; see MODEL-LICENSES.md.
+
+## Qt desktop shell (cross-platform UI foundation)
+
+The GTK4/libadwaita application remains available through `./run.sh`. A Qt/PySide6 desktop shell is now available through `./run-qt.sh`:
+
+```bash
+.venv/bin/python -m pip install -r requirements.txt
+.venv/bin/python -m pip install -r requirements-qt.txt
+./run-qt.sh
+```
+
+The Qt shell reuses the same local inference worker, voice recordings, models, generated WAV files and profile data. The UI is built on Qt Widgets and Qt Multimedia for playback and microphone capture. Model-specific loading and synthesis are routed through `model_adapters/`; the UI does not call F5-TTS directly. The existing GTK shell is retained during the migration rather than removed before feature parity is proven.
+
+**Platform status:** The Qt shell uses Qt Multimedia for microphone capture and playback, replacing the GTK client’s Linux-specific recording path. This is a cross-platform implementation, not proof of validated Windows/macOS support: native audio devices/codecs, inference dependencies, GPU runtime, installers, signing and packaging still need testing on those operating systems.

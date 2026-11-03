@@ -12,30 +12,26 @@ The supplied Voxora logo is used in the desktop sidebar and installed applicatio
 
 ## Features
 
-- Zero-shot voice cloning from reference recordings between 3 seconds and 1 hour (the F5-TTS model internally selects a clean representative segment of up to about 12 seconds).
-- Full-recording audio analysis (duration, sample rate, RMS/peak level, near-silence and clipping estimates), streamed in blocks.
-- Delivery presets (Natural, Professional, Formal, Conversational, Expressive) and supported controls for pace, voice adherence, prosody variation and output loudness.
-- Long scripts are split into model-sized batches by F5-TTS; there is no arbitrary 1,000-character UI limit. Practical output length remains constrained by RAM, VRAM, disk space and generation time.
-- GStreamer preview with real pause/resume from the current playback position.
-- Speaker Intelligence profile: sampled pitch range/variability, energy, pause statistics, spectral brightness and rough transcript-based speaking-rate estimate.
-- Persistent local speaker profile (`voices/speaker_profile.json`) and generated-vs-reference acoustic metric comparisons saved beside WAV exports.
-- Sentence-level controls: insert pauses, mark emphasis, wrap selected text with speed or delivery tags; each sentence is synthesized separately and joined with short fades.
-- Mood presets (indirect model-dependent parameter mappings), emphasis strength and pitch shift (local post-processing).
-- English, Hindi and Kannada model options.
-- Import WAV, MP3, FLAC, OGG, M4A and AAC reference audio.
-- Record directly from the default microphone.
-- Save and reuse a default voice profile.
-- Generate WAV audio, play it and browse previous exports.
-- Offline inference after the selected models are downloaded.
-- Automatic CUDA use when a compatible NVIDIA GPU is available; CPU fallback is supported by F5-TTS.
+- Local zero-shot voice cloning for English, Hindi and Kannada using F5-TTS.
+- Import or record reference audio from 3 seconds to 1 hour. F5-TTS uses a clean representative segment (up to about 12 seconds) for speaker conditioning; the full recording is analysed for acoustic statistics.
+- Continuous **0–100 voice controls** for speaking speed, reference adherence, prosody variation, loudness, pitch/register, sentence intonation, brightness, warmth, breathiness, resonance, compression, reverb, sentence spacing, emphasis, mood intensity and synthesis detail.
+- Real F5-TTS inference controls are mapped to model parameters. Local audio DSP controls are distinguished from neural speaker identity controls.
+- Sentence markup for pauses, speed overrides, delivery tags and emphasis.
+- Speaker analysis, persistent local profile and reference/generated acoustic comparisons.
+- Long scripts are split into model-sized batches. Runtime depends on text length, CPU/GPU, memory and model.
+- GStreamer playback with pause/resume; WAV export and local generation library.
+- CUDA acceleration when available and CPU fallback.
+- Offline inference after model weights have been downloaded; no API key or paid inference service.
+
+See [Voice Controls](docs/VOICE_CONTROLS.md) for exact mappings and limitations. Not every vocal property is independently controllable by F5-TTS; unsupported neural features are documented rather than represented by fake sliders.
 
 ## Supported systems
 
 - Fedora (GNOME recommended)
-- Ubuntu and Debian-based desktop distributions
+- Ubuntu / Debian-based Linux desktops
 - Arch Linux and derivatives
 
-The current desktop shell uses GTK 4/libadwaita and is Linux-only. Windows and macOS desktop builds are not currently provided. The inference stack itself is Python-based, but a different native UI port would be needed for those platforms.
+The current native desktop UI uses GTK 4 and libadwaita and is **Linux-only**. Windows and macOS desktop installers are not currently shipped. The inference code may be portable, but a maintained cross-platform UI port and per-OS audio/device testing are required first. See [CONTRIBUTING.md](CONTRIBUTING.md) for the platform roadmap.
 
 ## Requirements
 
@@ -84,7 +80,7 @@ Launch from your Applications menu as **Voxora**, or run:
 3. Import a clean 3-second to 1-hour recording or use **Record**. F5-TTS uses a representative clean segment (up to about 12 seconds) for cloning; the full source is analyzed for audio-level statistics. A clean 5–12 second segment is still a useful starting point.
 4. Enter the exact words spoken in that recording. The transcript should be in the same language as the reference sample.
 5. Paste the text to generate. The editor has no fixed 1,000-character limit; long scripts are batched by F5-TTS.
-6. Select a delivery preset and tune pace, voice adherence, prosody variation and loudness. These map to actual F5-TTS inference parameters.
+6. Select a delivery preset, then tune the 0–100 controls. F5-TTS parameters and post-generation DSP effects are described separately in docs/VOICE_CONTROLS.md.
 7. Select **Generate speech**. The first model load may take several minutes; long scripts can take substantially longer.
 8. Use **Play preview / Pause preview / Resume preview** to control playback without restarting it. WAV files are stored in the local outputs/ directory.
 9. Click **Analyze speaker profile** to measure the reference voice. The profile is persisted locally in `voices/speaker_profile.json`.
@@ -132,6 +128,14 @@ Run the full desktop-to-inference smoke test for each language (requires all mod
     /usr/bin/python3 native_app.py --self-test Kannada
 
 These smoke tests use the F5-TTS bundled demo reference audio. They do not establish similarity to your personal voice; that requires a recording you provide.
+
+## Contributing
+
+See [CONTRIBUTING.md](CONTRIBUTING.md) for development setup, testing expectations, pull request checklist and future scope.
+
+## Releases
+
+Tagged releases publish a clean Linux source bundle and SHA-256 checksum through GitHub Actions. This is a source package, not a self-contained binary installer: install Linux system libraries and Python/model dependencies using the included installer. Windows and macOS packages are not available until the desktop UI is ported and validated on those platforms.
 
 ## Uninstall
 

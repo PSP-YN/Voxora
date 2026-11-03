@@ -38,3 +38,6 @@ build/
 # Downloaded tokenizer vocabularies
 models/f5_hindi_vocab.txt
 models/f5_kannada_vocab.txt
+
+# Local backups
+*.pre-*

@@ -26,46 +26,51 @@ PROFILE_AUDIO = VOICES / "my_voice.wav"
 PROFILE_TEXT = VOICES / "my_voice.txt"
 
 CSS = """
-window, window.background { background: #161B22; color: #F0F3F6; }
-.main-header { background: #0D1117; border-bottom: 1px solid #30363D; min-height: 52px; }
-.main-header button { color: #C9D1D9; }
-.sidebar { background: #0D1117; color: #F0F3F6; min-width: 252px; border-right: 1px solid #30363D; padding: 0 2px; }
-.brand-title { color: #F0F3F6; font-size: 15px; font-weight: 750; }
-.brand-subtitle { color: #8B949E; font-size: 10px; letter-spacing: 1.1px; font-weight: 750; }
-.brand-logo { border-radius: 8px; }
-.nav-button { color: #AAB4BF; background: transparent; border: 1px solid transparent; border-radius: 8px; padding: 12px 14px; min-height: 44px; font-weight: 600; }
-.nav-button:hover { background: #1C252D; color: #F0F3F6; }
-.nav-button.nav-active { background: #0F5A47; color: #FFFFFF; border-color: #16765C; }
-.nav-button.nav-active image { color: #FFFFFF; }
-.sidebar-caption { color: #8B949E; font-size: 10px; font-weight: 800; letter-spacing: 1.2px; }
-.sidebar-foot { color: #AAB4BF; font-size: 11px; }
-.page-title { color: #F0F3F6; font-size: 30px; font-weight: 800; letter-spacing: -.6px; }
-.page-subtitle { color: #AAB4BF; font-size: 13px; }
-.section-title { color: #F0F3F6; font-size: 15px; font-weight: 750; }
-.muted { color: #8B949E; font-size: 12px; }
-.card { background: #161B22; border: 1px solid #30363D; border-radius: 8px; padding: 18px; }
-button { color: #D0D7DE; background: #212830; border: 1px solid #30363D; border-radius: 8px; padding: 9px 13px; min-height: 38px; font-weight: 650; }
-button:hover { background: #28333D; border-color: #46535F; }
+window, window.background { background: #0B1118; color: #E8F0F7; }
+.main-header { background: #0B1118; border-bottom: 1px solid #243443; min-height: 58px; }
+.main-header button { color: #D5E2EC; }
+.sidebar { background: #0D1721; color: #E8F0F7; min-width: 224px; border-right: 1px solid #243443; padding: 0 2px; }
+.brand-title { color: #F4FAFF; font-size: 16px; font-weight: 800; }
+.brand-subtitle { color: #7F9BAE; font-size: 10px; letter-spacing: 1.35px; font-weight: 800; }
+.brand-logo { border-radius: 14px; }
+.nav-button { color: #AFC1D0; background: transparent; border: 1px solid transparent; border-radius: 11px; padding: 11px 13px; min-height: 46px; font-weight: 650; }
+.nav-button:hover { background: #172A38; color: #F4FAFF; }
+.nav-button.nav-active { background: #103D39; color: #72F0CB; border-color: #176B5B; }
+.nav-button.nav-active image { color: #72F0CB; }
+.sidebar-caption { color: #7893A6; font-size: 10px; font-weight: 850; letter-spacing: 1.35px; }
+.sidebar-foot { color: #91A9B9; font-size: 11px; }
+.page-title { color: #F1F7FC; font-size: 29px; font-weight: 800; letter-spacing: -.55px; }
+.page-subtitle { color: #9CB0BF; font-size: 13px; }
+.section-title { color: #EAF3F9; font-size: 15px; font-weight: 750; }
+.muted { color: #8FA4B4; font-size: 12px; }
+.card { background: #111D28; border: 1px solid #263B4B; border-radius: 15px; padding: 18px; }
+button { color: #D9E6EF; background: #1A2A37; border: 1px solid #2D4353; border-radius: 10px; padding: 9px 12px; min-height: 40px; font-weight: 650; }
+button:hover { background: #233A4B; border-color: #3E6375; }
 button:disabled { opacity: .42; }
-.primary-action { background: #15803D; color: #FFFFFF; border: 1px solid #15803D; border-radius: 8px; padding: 11px 19px; min-height: 44px; font-weight: 750; }
-.primary-action:hover { background: #166534; border-color: #166534; }
-.upload-action { background: #10B981; color: #052E25; border: 1px solid #10B981; border-radius: 8px; padding: 11px 15px; min-height: 44px; font-weight: 750; }
-.upload-action:hover { background: #34D399; }
-.record-action { background: #0F766E; color: #FFFFFF; border: 1px solid #0F766E; border-radius: 8px; padding: 11px 15px; min-height: 44px; font-weight: 750; }
-.record-action:hover { background: #115E59; }
-.soft-action { background: #212830; color: #D0D7DE; border-color: #30363D; }
-.language-picker { color: #F0F3F6; background: #212830; border: 1px solid #30363D; border-radius: 8px; padding: 5px; min-height: 42px; }
-entry, textview.entry-area { background: #0D1117; color: #F0F3F6; border: 1px solid #30363D; border-radius: 8px; padding: 11px; }
-textview.entry-area text { background: #0D1117; color: #F0F3F6; }
-.pill { background: #043422; color: #51CF66; border: 1px solid #0F5A47; border-radius: 99px; padding: 6px 12px; font-size: 10px; font-weight: 800; letter-spacing: .4px; }
-.status-text { color: #AAB4BF; font-size: 12px; }
-.wave-bar { background: #10B981; border-radius: 3px; min-width: 3px; }
-.wave-muted { background: #48525D; border-radius: 3px; min-width: 3px; }
-.footer-panel { background: #1C252D; border: 1px solid #30363D; border-radius: 8px; padding: 12px 16px; }
+.primary-action { background: #0F9B78; color: #F4FFFC; border: 1px solid #18B68F; border-radius: 11px; padding: 11px 17px; min-height: 44px; font-weight: 800; }
+.primary-action:hover { background: #0D8468; border-color: #25D2A8; }
+.upload-action { background: #153D3B; color: #7BF0D0; border: 1px solid #247A69; border-radius: 11px; padding: 11px 14px; min-height: 44px; font-weight: 750; }
+.upload-action:hover { background: #1A514B; }
+.record-action { background: #174A5C; color: #E8FAFF; border: 1px solid #26738A; border-radius: 11px; padding: 11px 14px; min-height: 44px; font-weight: 750; }
+.record-action:hover { background: #1B5C70; }
+.soft-action { background: #1A2A37; color: #D9E6EF; border-color: #2D4353; }
+.language-picker { color: #EAF3F9; background: #172A38; border: 1px solid #2D485A; border-radius: 10px; padding: 5px; min-height: 42px; }
+entry, textview.entry-area { background: #0A141E; color: #EDF6FC; border: 1px solid #2A4050; border-radius: 11px; padding: 12px; }
+textview.entry-area text { background: #0A141E; color: #EDF6FC; }
+.pill { background: #103D35; color: #76E8C6; border: 1px solid #1A6B58; border-radius: 99px; padding: 6px 11px; font-size: 10px; font-weight: 850; letter-spacing: .45px; }
+.status-text { color: #C1D0DB; font-size: 12px; }
+.wave-bar { background: #27C99A; border-radius: 3px; min-width: 3px; }
+.wave-muted { background: #345064; border-radius: 3px; min-width: 3px; }
+.footer-panel { background: #10202C; border: 1px solid #2B4353; border-radius: 14px; padding: 12px 14px; }
 scrolledwindow { background: transparent; }
-separator { background: #30363D; }
-checkbutton { color: #C9D1D9; }
-spinner { color: #10B981; }
+separator { background: #263B4B; }
+checkbutton { color: #C7D7E2; }
+spinner { color: #37D6A7; }
+flowbox { background: transparent; }
+flowbox > flowboxchild { padding: 2px; }
+scale trough { background: #263B4B; min-height: 5px; border-radius: 99px; }
+scale highlight { background: #24B98E; border-radius: 99px; }
+scale slider { background: #E5FFF7; border: 2px solid #1AB88D; min-width: 15px; min-height: 15px; }
 """
 
 def label(text, css=None, wrap=True):
@@ -124,8 +129,8 @@ class VoiceStudio(Adw.Application):
     def build_window(self):
         self.window = Adw.ApplicationWindow(application=self)
         self.window.set_title("Voxora")
-        self.window.set_default_size(1360, 900)
-        self.window.set_size_request(1040, 720)
+        self.window.set_default_size(1440, 920)
+        self.window.set_size_request(900, 640)
         self.window.set_decorated(True)
 
         # Explicit native window controls: minimize, maximize/restore and close.
@@ -146,7 +151,7 @@ class VoiceStudio(Adw.Application):
 
         sidebar = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=12)
         sidebar.add_css_class("sidebar")
-        sidebar.set_size_request(240, -1)
+        sidebar.set_size_request(220, -1)
         sidebar.set_hexpand(False)
         sidebar.set_vexpand(True)
         sidebar.set_margin_top(22); sidebar.set_margin_bottom(18)
@@ -157,7 +162,7 @@ class VoiceStudio(Adw.Application):
         brand.set_halign(Gtk.Align.CENTER)
         brand.set_margin_top(4)
         logo = Gtk.Image.new_from_file(str(ROOT / "assets" / "voxora-logo.png"))
-        logo.set_pixel_size(158)
+        logo.set_pixel_size(132)
         logo.set_halign(Gtk.Align.CENTER)
         logo.add_css_class("brand-logo")
         brand.append(logo)
@@ -208,8 +213,8 @@ class VoiceStudio(Adw.Application):
 
     def page_shell(self):
         outer = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=0)
-        outer.set_margin_top(28); outer.set_margin_bottom(24)
-        outer.set_margin_start(28); outer.set_margin_end(28)
+        outer.set_margin_top(24); outer.set_margin_bottom(22)
+        outer.set_margin_start(22); outer.set_margin_end(22)
         outer.set_hexpand(True); outer.set_vexpand(True)
         return outer
 
@@ -221,8 +226,8 @@ class VoiceStudio(Adw.Application):
         page = self.page_shell()
         page.set_margin_top(24)
         page.set_margin_bottom(20)
-        page.set_margin_start(26)
-        page.set_margin_end(26)
+        page.set_margin_start(20)
+        page.set_margin_end(20)
 
         heading = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=16)
         heading.set_valign(Gtk.Align.CENTER)
@@ -323,15 +328,21 @@ class VoiceStudio(Adw.Application):
         self.script = Gtk.TextView()
         self.script.set_wrap_mode(Gtk.WrapMode.WORD_CHAR)
         self.script.set_vexpand(True)
-        self.script.set_size_request(-1, 280)
+        self.script.set_size_request(-1, 240)
         self.script.add_css_class("entry-area")
         self.script.get_buffer().set_text("This is a test of the Local Voice Studio desktop application.")
         script_scroll = Gtk.ScrolledWindow()
-        script_scroll.set_min_content_height(280)
+        script_scroll.set_min_content_height(240)
         script_scroll.set_vexpand(True)
         script_scroll.set_child(self.script)
         script_card.append(script_scroll)
-        script_tools = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=8)
+        script_tools = Gtk.FlowBox()
+        script_tools.set_selection_mode(Gtk.SelectionMode.NONE)
+        script_tools.set_max_children_per_line(2)
+        script_tools.set_min_children_per_line(1)
+        script_tools.set_row_spacing(5)
+        script_tools.set_column_spacing(5)
+        script_tools.set_homogeneous(True)
         pause_insert = button("Insert 500 ms pause", "media-playback-pause-symbolic")
         pause_insert.connect("clicked", lambda *_: self.script.get_buffer().insert_at_cursor("[pause:500ms]"))
         script_tools.append(pause_insert)
@@ -375,38 +386,36 @@ class VoiceStudio(Adw.Application):
         controls.append(mood_row)
         slider_grid = Gtk.Grid()
         slider_grid.set_column_spacing(18); slider_grid.set_row_spacing(10)
-        self.speed_scale = Gtk.Scale.new_with_range(Gtk.Orientation.HORIZONTAL, 0.70, 1.30, 0.05)
-        self.speed_scale.set_value(1.0); self.speed_scale.set_digits(2); self.speed_scale.set_hexpand(True)
-        self.speed_value = label("1.00×", "muted", False)
-        self.speed_scale.connect("value-changed", lambda w: self.speed_value.set_text(f"{w.get_value():.2f}×"))
-        slider_grid.attach(label("Pace / speed", "muted", False), 0, 0, 1, 1); slider_grid.attach(self.speed_scale, 1, 0, 1, 1); slider_grid.attach(self.speed_value, 2, 0, 1, 1)
-        self.guidance_scale = Gtk.Scale.new_with_range(Gtk.Orientation.HORIZONTAL, 1.0, 4.0, 0.1)
-        self.guidance_scale.set_value(2.0); self.guidance_scale.set_digits(1); self.guidance_scale.set_hexpand(True)
-        self.guidance_value = label("2.0", "muted", False)
-        self.guidance_scale.connect("value-changed", lambda w: self.guidance_value.set_text(f"{w.get_value():.1f}"))
-        slider_grid.attach(label("Voice adherence", "muted", False), 0, 1, 1, 1); slider_grid.attach(self.guidance_scale, 1, 1, 1, 1); slider_grid.attach(self.guidance_value, 2, 1, 1, 1)
-        self.variation_scale = Gtk.Scale.new_with_range(Gtk.Orientation.HORIZONTAL, -1.0, 1.0, 0.1)
-        self.variation_scale.set_value(-1.0); self.variation_scale.set_digits(1); self.variation_scale.set_hexpand(True)
-        self.variation_value = label("Auto", "muted", False)
-        self.variation_scale.connect("value-changed", lambda w: self.variation_value.set_text("Auto" if w.get_value() <= -0.95 else f"{w.get_value():.1f}"))
-        slider_grid.attach(label("Rhythm / prosody variation", "muted", False), 0, 2, 1, 1); slider_grid.attach(self.variation_scale, 1, 2, 1, 1); slider_grid.attach(self.variation_value, 2, 2, 1, 1)
-        self.loudness_scale = Gtk.Scale.new_with_range(Gtk.Orientation.HORIZONTAL, 0.04, 0.20, 0.01)
-        self.loudness_scale.set_value(0.10); self.loudness_scale.set_digits(2); self.loudness_scale.set_hexpand(True)
-        self.loudness_value = label("0.10", "muted", False)
-        self.loudness_scale.connect("value-changed", lambda w: self.loudness_value.set_text(f"{w.get_value():.2f}"))
-        slider_grid.attach(label("Output loudness", "muted", False), 0, 3, 1, 1); slider_grid.attach(self.loudness_scale, 1, 3, 1, 1); slider_grid.attach(self.loudness_value, 2, 3, 1, 1)
-        self.pitch_scale = Gtk.Scale.new_with_range(Gtk.Orientation.HORIZONTAL, -3.0, 3.0, 0.5)
-        self.pitch_scale.set_value(0.0); self.pitch_scale.set_digits(1); self.pitch_scale.set_hexpand(True)
-        self.pitch_value = label("0.0 st", "muted", False)
-        self.pitch_scale.connect("value-changed", lambda w: self.pitch_value.set_text(f"{w.get_value():+.1f} st"))
-        slider_grid.attach(label("Pitch / intonation shift", "muted", False), 0, 4, 1, 1); slider_grid.attach(self.pitch_scale, 1, 4, 1, 1); slider_grid.attach(self.pitch_value, 2, 4, 1, 1)
-        self.emphasis_scale = Gtk.Scale.new_with_range(Gtk.Orientation.HORIZONTAL, 0.0, 1.0, 0.1)
-        self.emphasis_scale.set_value(0.5); self.emphasis_scale.set_digits(1); self.emphasis_scale.set_hexpand(True)
-        self.emphasis_value = label("0.5", "muted", False)
-        self.emphasis_scale.connect("value-changed", lambda w: self.emphasis_value.set_text(f"{w.get_value():.1f}"))
-        slider_grid.attach(label("Marked emphasis strength", "muted", False), 0, 5, 1, 1); slider_grid.attach(self.emphasis_scale, 1, 5, 1, 1); slider_grid.attach(self.emphasis_value, 2, 5, 1, 1)
+        self.voice_controls = {}
+        def add_control(key, title, default, row, hint):
+            name = label(title, "muted", False)
+            scale = Gtk.Scale.new_with_range(Gtk.Orientation.HORIZONTAL, 0, 100, 1)
+            scale.set_value(default); scale.set_digits(0); scale.set_hexpand(True)
+            value = label(f"{default:.0f}/100", "muted", False)
+            scale.connect("value-changed", lambda w, out=value: out.set_text(f"{w.get_value():.0f}/100"))
+            scale.set_tooltip_text(hint)
+            slider_grid.attach(name, 0, row, 1, 1)
+            slider_grid.attach(scale, 1, row, 1, 1)
+            slider_grid.attach(value, 2, row, 1, 1)
+            self.voice_controls[key] = scale
+        add_control("speed", "Speaking speed", 50, 0, "0 = slowest, 50 = natural, 100 = fastest")
+        add_control("voice_adherence", "Reference conditioning guidance", 50, 1, "Maps to F5-TTS classifier-free guidance; model-dependent")
+        add_control("variation", "Prosody / rhythm variation", 0, 2, "Controls F5-TTS sway sampling")
+        add_control("loudness", "Output loudness", 38, 3, "Normalized output RMS target")
+        add_control("pitch", "Pitch / register", 50, 4, "Post-generation pitch shift, -6 to +6 semitones")
+        add_control("intonation", "Sentence intonation", 35, 5, "Punctuation-aware pitch movement; not phoneme-level contour editing")
+        add_control("brightness", "Brightness", 50, 6, "High-frequency tone shaping")
+        add_control("warmth", "Warmth / low-mid body", 50, 7, "Low-frequency tone shaping")
+        add_control("breathiness", "Breathiness", 0, 8, "Adds a subtle noise component; audio effect, not neural vocal-fold control")
+        add_control("resonance", "Resonance / presence", 50, 9, "Band emphasis around vocal presence frequencies")
+        add_control("compression", "Dynamic compression", 0, 10, "Reduces peak-to-average dynamics")
+        add_control("reverb", "Room / reverb", 0, 11, "Adds a short local room response")
+        add_control("sentence_pause", "Sentence spacing", 18, 12, "Automatic silence inserted between generated sentence segments")
+        add_control("emphasis", "Marked emphasis intensity", 50, 13, "Strength applied to [emphasis] tagged text")
+        add_control("mood_intensity", "Mood intensity", 50, 14, "Scales the selected mood mapping from neutral to full preset effect")
+        add_control("quality", "Synthesis detail / quality", 50, 15, "Maps to F5-TTS denoising steps; higher values take longer")
         controls.append(slider_grid)
-        controls.append(label("Mood presets indirectly adjust pace and sampling (model-dependent, not guaranteed emotion). Pitch shift is post-processing and can alter perceived timbre. Pauses and emphasis tags operate sentence-by-sentence; this model cannot guarantee human-like acting.", "muted", True))
+        controls.append(label("All sliders use 0–100. 50 is the neutral point for centered controls. Voice adherence, speed and prosody variation map to F5-TTS parameters; tone, breathiness, compression and reverb are local audio processing. These effects do not alter the underlying speaker identity. Exact phoneme-level emotion, accent and vocal-fold control require a model with explicit conditioning.", "muted", True))
         page.append(controls)
 
         footer = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=12)
@@ -422,16 +431,17 @@ class VoiceStudio(Adw.Application):
         self.spinner = Gtk.Spinner()
         footer.append(self.spinner)
         self.status = label("Ready", "status-text", True)
-        self.status.set_max_width_chars(28)
+        self.status.set_max_width_chars(34)
+        self.status.set_hexpand(True)
         footer.append(self.status)
-        self.generate_button = button("Generate speech", "media-playback-start-symbolic", "primary-action")
+        self.generate_button = button("Generate", "media-playback-start-symbolic", "primary-action")
         self.generate_button.connect("clicked", self.generate)
         footer.append(self.generate_button)
-        self.play_button = button("Play preview", "media-playback-start-symbolic")
+        self.play_button = button("Preview", "media-playback-start-symbolic")
         self.play_button.set_sensitive(False)
         self.play_button.connect("clicked", self.play_output)
         footer.append(self.play_button)
-        self.save_button = button("Save file", "document-save-symbolic")
+        self.save_button = button("Export", "document-save-symbolic")
         self.save_button.set_sensitive(False)
         self.save_button.connect("clicked", self.save_output)
         footer.append(self.save_button)
@@ -491,18 +501,19 @@ class VoiceStudio(Adw.Application):
         threading.Thread(target=self.run_backend, args=(payload,), daemon=True).start()
 
     def apply_style_preset(self, *_):
-        # Conservative mappings: presets only adjust speed and sampling variation.
+        # Presets are convenience starting points; every control remains editable.
         presets = {
-            0: (1.00, -1.0, 2.0),  # Natural
-            1: (0.96, -0.5, 2.2),  # Professional
-            2: (0.92, -0.7, 2.3),  # Formal
-            3: (1.04, -0.3, 1.9),  # Conversational
-            4: (1.00, 0.2, 1.8),   # Expressive
+            0: (50, 0, 50),   # Natural
+            1: (44, 25, 55),  # Professional
+            2: (37, 15, 58),  # Formal
+            3: (57, 35, 45),  # Conversational
+            4: (50, 65, 40),  # Expressive
         }
-        speed, variation, guidance = presets.get(self.style_preset.get_selected(), presets[0])
-        self.speed_scale.set_value(speed)
-        self.variation_scale.set_value(variation)
-        self.guidance_scale.set_value(guidance)
+        speed, variation, adherence = presets.get(self.style_preset.get_selected(), presets[0])
+        if hasattr(self, "voice_controls"):
+            self.voice_controls["speed"].set_value(speed)
+            self.voice_controls["variation"].set_value(variation)
+            self.voice_controls["voice_adherence"].set_value(adherence)
 
     def update_script_count(self, buffer):
         if not hasattr(self, "script_count"):
@@ -633,13 +644,24 @@ class VoiceStudio(Adw.Application):
         language = ["English", "Hindi", "Kannada"][self.language.get_selected()]
         payload = {"language": language, "text": script, "transcript": transcript,
                    "reference_audio": self.reference_path, "save_profile": self.save_profile.get_active(),
-                   "settings": {"speed": self.speed_scale.get_value(),
-                                "guidance": self.guidance_scale.get_value(),
-                                "variation": self.variation_scale.get_value(),
-                                "loudness": self.loudness_scale.get_value(),
-                                "mood": ["neutral","calm","upbeat","confident","warm","dramatic"][self.mood_picker.get_selected()],
-                                "pitch_shift": self.pitch_scale.get_value(),
-                                "emphasis_strength": self.emphasis_scale.get_value()}}
+                   "settings": {
+                       "speed": 0.70 + (self.voice_controls["speed"].get_value() / 100.0) * 0.60,
+                       "guidance": 1.0 + (self.voice_controls["voice_adherence"].get_value() / 100.0) * 3.0,
+                       "variation": -1.0 + (self.voice_controls["variation"].get_value() / 100.0) * 2.0,
+                       "loudness": 0.04 + (self.voice_controls["loudness"].get_value() / 100.0) * 0.16,
+                       "mood": ["neutral","calm","upbeat","confident","warm","dramatic"][self.mood_picker.get_selected()],
+                       "pitch_shift": -6.0 + (self.voice_controls["pitch"].get_value() / 100.0) * 12.0,
+                       "intonation": self.voice_controls["intonation"].get_value() / 100.0,
+                       "brightness": -1.0 + (self.voice_controls["brightness"].get_value() / 100.0) * 2.0,
+                       "warmth": -1.0 + (self.voice_controls["warmth"].get_value() / 100.0) * 2.0,
+                       "breathiness": self.voice_controls["breathiness"].get_value() / 100.0,
+                       "resonance": -1.0 + (self.voice_controls["resonance"].get_value() / 100.0) * 2.0,
+                       "compression": self.voice_controls["compression"].get_value() / 100.0,
+                       "reverb": self.voice_controls["reverb"].get_value() / 100.0,
+                       "sentence_pause_ms": int(self.voice_controls["sentence_pause"].get_value() * 10),
+                       "emphasis_strength": self.voice_controls["emphasis"].get_value() / 100.0,
+                       "mood_intensity": self.voice_controls["mood_intensity"].get_value() / 100.0,
+                       "nfe_step": int(16 + self.voice_controls["quality"].get_value() * 0.48)}}
         self.busy = True
         self.generate_button.set_sensitive(False)
         self.spinner.start()

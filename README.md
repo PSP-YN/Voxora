@@ -31,12 +31,13 @@ See [Voice Controls](docs/VOICE_CONTROLS.md) for exact mappings and limitations.
 - Ubuntu / Debian-based Linux desktops
 - Arch Linux and derivatives
 
-The current native desktop UI uses GTK 4 and libadwaita and is **Linux-only**. Windows and macOS desktop installers are not currently shipped. The inference code may be portable, but a maintained cross-platform UI port and per-OS audio/device testing are required first. See [CONTRIBUTING.md](CONTRIBUTING.md) for the platform roadmap.
+The **default application** is the GTK 4/libadwaita Linux desktop client. An optional Qt/PySide6 preview is available through `./run-qt.sh`; it is not yet the default and does not replace the GTK client. Windows and macOS are migration targets, not validated releases. Do not promote Qt or advertise cross-platform production support until the feature-parity and native test gates in [docs/PLATFORM_SUPPORT.md](docs/PLATFORM_SUPPORT.md) pass.
 
 ## Requirements
 
 - Python 3.11 or 3.12 for the inference environment.
-- GTK 4, libadwaita, PyGObject and GStreamer base/good plugins for the desktop UI and audio preview.
+- GTK 4, libadwaita, PyGObject and GStreamer base/good plugins for the default GTK desktop UI.
+- Optional Qt preview: install `requirements-qt.txt` into the inference environment; Qt Multimedia provides preview playback and microphone capture.
 - FFmpeg and ALSA utilities for audio conversion and microphone recording.
 - 8 GB RAM minimum; 16 GB or more recommended.
 - NVIDIA GPU with 6 GB VRAM recommended for faster generation. CPU inference works but can be substantially slower.
@@ -105,7 +106,8 @@ Voxora does not require API keys, paid endpoints or a user account. Model terms 
 
 ## Project layout
 
-    native_app.py          GTK 4 / libadwaita desktop UI
+    native_app.py          Default GTK 4 / libadwaita desktop UI
+    qt_app/main.py         Optional Qt/PySide6 desktop preview
     native_backend.py      isolated F5-TTS inference worker
     download_models.py     public model downloader
     install.sh             Linux dependency and desktop integration setup
@@ -149,7 +151,7 @@ The Voxora application code is MIT-licensed. Third-party model weights have sepa
 
 ## Qt desktop shell (cross-platform UI foundation)
 
-The GTK4/libadwaita application remains available through `./run.sh`. A Qt/PySide6 desktop shell is now available through `./run-qt.sh`:
+The GTK4/libadwaita application remains the **default Linux application** through `./run.sh`. The Qt/PySide6 application is an **optional preview** through `./run-qt.sh`; it will not replace GTK until the feature-parity and native platform validation gates in [docs/PLATFORM_SUPPORT.md](docs/PLATFORM_SUPPORT.md) pass:
 
 Linux/macOS:
 
@@ -167,6 +169,6 @@ Windows (PowerShell):
 .\run-qt.bat
 ```
 
-The Qt shell reuses the same local inference worker, voice recordings, models, generated WAV files and profile data. It launches the worker with the active Python interpreter, so the Qt entry point does not assume a Unix `.venv/bin/python` path. The UI is built on Qt Widgets and Qt Multimedia for playback and microphone capture. Model-specific loading and synthesis are routed through `model_adapters/`; the UI does not call F5-TTS directly. The existing GTK shell is retained during the migration rather than removed before feature parity is proven.
+The Qt shell reuses the same local inference worker, voice recordings, models, generated WAV files and profile data. The Qt preview now separates the focused speech studio from the dedicated 0–100 controls page, restores selection-aware script markup, delivery preset behavior, speaker comparison and profile details, and offers resettable controls. The GTK application remains untouched as the stable default. It launches the worker with the active Python interpreter, so the Qt entry point does not assume a Unix `.venv/bin/python` path. The UI is built on Qt Widgets and Qt Multimedia for playback and microphone capture. Model-specific loading and synthesis are routed through `model_adapters/`; the UI does not call F5-TTS directly. The existing GTK shell is retained during the migration rather than removed before feature parity is proven.
 
-**Platform status:** The Qt shell uses Qt Multimedia for microphone capture and playback, replacing the GTK client’s Linux-specific recording path. This is a cross-platform implementation, not proof of validated Windows/macOS support: native audio devices/codecs, inference dependencies, GPU runtime, installers, signing and packaging still need testing on those operating systems.
+**Platform status:** The Qt preview uses Qt Multimedia for microphone capture and playback; the GTK client retains its existing Linux-specific recording path. This is a cross-platform implementation, not proof of validated Windows/macOS support: native audio devices/codecs, inference dependencies, GPU runtime, installers, signing and packaging still need testing on those operating systems.

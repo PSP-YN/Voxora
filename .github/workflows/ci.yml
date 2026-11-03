@@ -16,12 +16,14 @@ jobs:
         with:
           python-version: "3.12"
       - name: Install test tools
-        run: python -m pip install --upgrade pip pytest numpy==1.26.4 scipy
+        run: python -m pip install --upgrade pip pytest numpy==1.26.4 scipy PySide6-Essentials>=6.8,<7
       - name: Compile application and worker
         run: python -m py_compile native_app.py native_backend.py download_models.py qt_app/main.py model_adapters/*.py
-      - name: Run backend and adapter tests
+      - name: Run backend, adapter and Qt UI tests
         env:
           PYTHONPATH: .
-        run: pytest -q --ignore=tests/test_qt_ui.py
+          QT_QPA_PLATFORM: offscreen
+          VOXORA_HEADLESS_TEST: "1"
+        run: pytest -q
       - name: Check installer syntax
         run: bash -n install.sh run.sh uninstall.sh

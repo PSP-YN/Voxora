@@ -23,10 +23,8 @@
 - Keep request/response payloads serializable and UI-neutral.
 - Capabilities are descriptive, not a promise that a UI control has been implemented. Add a control only when the adapter or a clearly labelled DSP stage performs it.
 - Keep recordings, profiles, model caches and outputs in user data directories in a future installer; never delete them during app upgrades/uninstall by default.
-- Do not remove the GTK client until Qt feature parity, Linux audio behavior and automated smoke tests are verified.
+- Keep `./run.sh` as the default GTK launcher. Do not promote Qt until the feature-parity and native cross-platform validation gates in `docs/PLATFORM_SUPPORT.md` are complete.
 
-## Known migration gaps
+## Promotion status
 
-- Qt client currently covers create, profile analysis, local export history, playback, settings and all existing 0–100 controls. Some detailed GTK comparison/profile presentation and script-selection convenience interactions are not yet at parity.
-- Qt microphone capture is implemented through Qt Multimedia; device enumeration, codec availability and recording/playback need validation on Windows and macOS.
-- Windows/macOS builds, audio-device testing, GPU inference, installer signing and packaging are not yet validated.
+The Qt client has focused Studio and Voice controls pages, selection-aware script markup, delivery presets, profile analysis/comparison, export history and model capability display. The GTK client remains the default and fallback. Native Windows/macOS builds, device testing, inference runtime, installer signing and upgrade/uninstall behavior remain unvalidated. See `docs/PLATFORM_SUPPORT.md` for the explicit promotion gate.

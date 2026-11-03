@@ -44,7 +44,7 @@ class BackendWorker(QThread):
     done = Signal(dict)
     def __init__(self, payload): super().__init__(); self.payload=payload
     def run(self):
-        cmd=[str(ROOT/'.venv'/'bin'/'python'), str(ROOT/'native_backend.py')]
+        cmd=[sys.executable, str(ROOT/'native_backend.py')]
         try:
             p=subprocess.Popen(cmd,cwd=ROOT,stdin=subprocess.PIPE,stdout=subprocess.PIPE,stderr=subprocess.STDOUT,text=True,bufsize=1)
             p.stdin.write(json.dumps(self.payload,ensure_ascii=False)); p.stdin.close()

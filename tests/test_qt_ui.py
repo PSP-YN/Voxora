@@ -20,15 +20,18 @@ def test_qt_shell_has_focused_pages_and_all_controls():
     assert len(window.sliders) == 16
     assert set(window.sliders) == {item[0] for item in window.CONTROL_SPEC}
     assert all(slider.minimum() == 0 and slider.maximum() == 100 for slider in window.sliders.values())
+    assert window.payload()['settings']['variation'] == 0.0
+    assert window.payload()['settings']['speed'] == 1.0
     assert window.player is None
     assert window.generate_btn.isEnabled()
     assert window.script_count.text() == f'{len(window.script.toPlainText()):,} characters'
+    assert window.sliders['variation'].value() == 50
     window.close()
 
 
 def test_delivery_presets_update_the_same_model_parameters_as_gtk():
     app, window = make_window()
-    expected = {0: (50, 0, 50), 1: (44, 25, 55), 2: (37, 15, 58), 3: (57, 35, 45), 4: (50, 65, 40)}
+    expected = {0: (50, 50, 50), 1: (44, 25, 55), 2: (37, 15, 58), 3: (57, 35, 45), 4: (50, 65, 40)}
     for index, values in expected.items():
         window.preset.setCurrentIndex(index)
         actual = tuple(window.sliders[key].value() for key in ('speed', 'variation', 'voice_adherence'))

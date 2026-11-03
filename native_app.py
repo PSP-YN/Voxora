@@ -400,7 +400,7 @@ class VoiceStudio(Adw.Application):
             self.voice_controls[key] = scale
         add_control("speed", "Speaking speed", 50, 0, "0 = slowest, 50 = natural, 100 = fastest")
         add_control("voice_adherence", "Reference conditioning guidance", 50, 1, "Maps to F5-TTS classifier-free guidance; model-dependent")
-        add_control("variation", "Prosody / rhythm variation", 0, 2, "Controls F5-TTS sway sampling")
+        add_control("variation", "Prosody / rhythm variation", 50, 2, "Controls F5-TTS sway sampling")
         add_control("loudness", "Output loudness", 38, 3, "Normalized output RMS target")
         add_control("pitch", "Pitch / register", 50, 4, "Post-generation pitch shift, -6 to +6 semitones")
         add_control("intonation", "Sentence intonation", 35, 5, "Punctuation-aware pitch movement; not phoneme-level contour editing")

@@ -75,7 +75,7 @@ class VoxoraWindow(QMainWindow):
     CONTROL_SPEC = [
         ('speed','Speaking speed',50,'Slow to fast; 50 is natural'),
         ('voice_adherence','Reference conditioning guidance',50,'F5-TTS classifier-free guidance mapping'),
-        ('variation','Prosody / rhythm variation',0,'F5-TTS sway sampling'),
+        ('variation','Prosody / rhythm variation',50,'F5-TTS sway sampling'),
         ('loudness','Output loudness',38,'Normalized output RMS target'),
         ('pitch','Pitch / register',50,'Post-generation pitch shift, -6 to +6 semitones'),
         ('intonation','Sentence intonation',35,'Punctuation-aware segment inflection'),
@@ -185,7 +185,7 @@ class VoxoraWindow(QMainWindow):
         self.status.setText('Voice controls reset to defaults.')
 
     def apply_style_preset(self):
-        presets={0:(50,0,50),1:(44,25,55),2:(37,15,58),3:(57,35,45),4:(50,65,40)}
+        presets={0:(50,50,50),1:(44,25,55),2:(37,15,58),3:(57,35,45),4:(50,65,40)}
         speed,variation,guidance=presets.get(self.preset.currentIndex(),presets[0])
         self.sliders['speed'].setValue(speed); self.sliders['variation'].setValue(variation); self.sliders['voice_adherence'].setValue(guidance)
 
@@ -213,7 +213,7 @@ class VoxoraWindow(QMainWindow):
         page=QWidget(); lay=QVBoxLayout(page); lay.setContentsMargins(20,18,20,18); lay.setSpacing(12)
         self.page_heading('Exports & history','Generated audio files stored locally on this computer.',lay)
         row=QHBoxLayout(); row.addStretch(); refresh=QPushButton('Refresh'); refresh.clicked.connect(self.refresh_library); row.addWidget(refresh); lay.addLayout(row)
-        self.library=QVBoxLayout(); self.library.setSpacing(8); lay.addLayout(self.library); lay.addStretch(); self.tabs.addTab(page,'Library'); self.refresh_library()
+        history=QScrollArea(); history.setWidgetResizable(True); history_content=QWidget(); self.library=QVBoxLayout(history_content); self.library.setSpacing(8); history.setWidget(history_content); lay.addWidget(history,1); self.tabs.addTab(page,'Library'); self.refresh_library()
 
     def build_settings(self):
         from model_adapters import list_adapters
@@ -233,7 +233,9 @@ class VoxoraWindow(QMainWindow):
 
     def choose_audio(self):
         path,_=QFileDialog.getOpenFileName(self,'Choose reference audio',str(VOICES),'Audio (*.wav *.mp3 *.flac *.ogg *.m4a *.aac)')
-        if path: self.reference=path; self.ref_label.setText(Path(path).name); self.status.setText('Reference recording selected.')
+        if path:
+            self.reference=path; self.ref_label.setText(Path(path).name); self.status.setText('Reference recording selected.')
+            if self.tabs.currentIndex()==2: self.tabs.setCurrentIndex(0)
     def toggle_recording(self):
         if self.media_recorder is None:
             self.status.setText("Audio capture is disabled in headless test mode."); return
@@ -336,7 +338,7 @@ class VoxoraWindow(QMainWindow):
             row=QHBoxLayout(); info=QVBoxLayout(); name=QLabel(path.stem); name.setStyleSheet('font-weight:700;');
             size=path.stat().st_size/1024/1024; date=datetime.datetime.fromtimestamp(path.stat().st_mtime).strftime('%d %b %Y · %H:%M')
             detail=QLabel(f'{size:.1f} MB · {date}'); detail.setObjectName('muted'); info.addWidget(name); info.addWidget(detail); row.addLayout(info,1)
-            open_btn=QPushButton('Open & play'); open_btn.clicked.connect(lambda checked=False,p=path:self.open_library_file(p)); row.addWidget(open_btn)
+            open_btn=QPushButton('Play file'); open_btn.clicked.connect(lambda checked=False,p=path:self.open_library_file(p)); row.addWidget(open_btn)
             export_btn=QPushButton('Export copy'); export_btn.clicked.connect(lambda checked=False,p=path:self.export_file(p)); row.addWidget(export_btn)
             self.library.addWidget(self.card('',row))
 

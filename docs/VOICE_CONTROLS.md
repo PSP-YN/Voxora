@@ -6,7 +6,7 @@ All continuous controls use **0–100**. For centered controls, 50 is neutral; f
 |---|---|---|
 | Speaking speed | F5-TTS speed, 0.70×–1.30× | Not phoneme-duration editing |
 | Reference conditioning guidance | F5-TTS CFG, 1–4 | Not a calibrated similarity percentage |
-| Prosody variation | F5-TTS sway coefficient, −1 to +1 | Model-dependent |
+| Prosody variation | F5-TTS sway coefficient, −1 to +1; 50 maps to the neutral coefficient 0 | Model-dependent |
 | Output loudness | F5-TTS target RMS, 0.04–0.20 | Not mastering loudness |
 | Pitch / register | Local pitch shift, −6 to +6 semitones | Extreme values sound artificial |
 | Sentence intonation | Punctuation-aware segment pitch | Not a drawn F0 contour |

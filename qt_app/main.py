@@ -15,8 +15,12 @@ from PySide6.QtCore import Qt, QThread, Signal, QUrl, QProcess
 from PySide6.QtWidgets import (QApplication, QMainWindow, QWidget, QVBoxLayout, QHBoxLayout,
     QGridLayout, QTabWidget, QLabel, QPushButton, QComboBox, QSlider, QTextEdit,
     QFileDialog, QCheckBox, QProgressBar, QScrollArea, QGroupBox, QMessageBox)
-from PySide6.QtMultimedia import (QMediaPlayer, QAudioOutput, QMediaDevices, QAudioInput,
-    QMediaCaptureSession, QMediaRecorder, QMediaFormat)
+if os.environ.get("VOXORA_HEADLESS_TEST") != "1":
+    from PySide6.QtMultimedia import (QMediaPlayer, QAudioOutput, QMediaDevices, QAudioInput,
+        QMediaCaptureSession, QMediaRecorder, QMediaFormat)
+else:
+    QMediaPlayer = QAudioOutput = QMediaDevices = QAudioInput = None
+    QMediaCaptureSession = QMediaRecorder = QMediaFormat = None
 
 STYLE = """
 QWidget { background:#0b1118; color:#e8f0f7; font-size:13px; }

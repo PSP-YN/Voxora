@@ -31,7 +31,7 @@ See [Voice Controls](docs/VOICE_CONTROLS.md) for exact mappings and limitations.
 - Ubuntu / Debian-based Linux desktops
 - Arch Linux and derivatives
 
-The **default application** is the GTK 4/libadwaita Linux desktop client. An optional Qt/PySide6 preview is available through `./run-qt.sh`; it is not yet the default and does not replace the GTK client. Windows and macOS are migration targets, not validated releases. Do not promote Qt or advertise cross-platform production support until the feature-parity and native test gates in [docs/PLATFORM_SUPPORT.md](docs/PLATFORM_SUPPORT.md) pass.
+The Linux Applications-menu entry launches the Qt/PySide6 desktop client. The GTK 4/libadwaita client remains available as a fallback through `./run.sh`. This Linux launcher choice does not imply that Windows or macOS are validated releases; cross-platform production support still requires the feature-parity and native test gates in [docs/PLATFORM_SUPPORT.md](docs/PLATFORM_SUPPORT.md).
 
 ## Requirements
 
@@ -151,7 +151,7 @@ The Voxora application code is MIT-licensed. Third-party model weights have sepa
 
 ## Qt desktop shell (cross-platform UI foundation)
 
-The GTK4/libadwaita application remains the **default Linux application** through `./run.sh`. The Qt/PySide6 application is an **optional preview** through `./run-qt.sh`; it will not replace GTK until the feature-parity and native platform validation gates in [docs/PLATFORM_SUPPORT.md](docs/PLATFORM_SUPPORT.md) pass:
+The Linux Applications-menu entry and `./run-qt.sh` launch the Qt/PySide6 desktop client. The GTK4/libadwaita client remains available through `./run.sh` as a fallback. Windows and macOS remain unvalidated until the feature-parity and native platform validation gates in [docs/PLATFORM_SUPPORT.md](docs/PLATFORM_SUPPORT.md) pass:
 
 Linux/macOS:
 

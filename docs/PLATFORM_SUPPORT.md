@@ -2,8 +2,8 @@
 
 ## Application selection policy
 
-- `./run.sh` remains the default launcher and continues to start the existing GTK4/libadwaita application on Linux.
-- `./run-qt.sh` starts the optional Qt/PySide application on Linux.
+- The Linux Applications-menu entry launches the Qt/PySide application through `./run-qt.sh`.
+- `./run.sh` remains available as the GTK4/libadwaita fallback launcher on Linux.
 - `run-qt.bat` is a Windows development entry point, not a signed or supported installer.
 - The GTK application, its desktop entry and its Linux dependencies are retained. No default launcher or uninstall behavior is changed as part of this migration.
 

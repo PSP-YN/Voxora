@@ -12,6 +12,7 @@ for folder in (VOICES, OUTPUTS, LOGS): folder.mkdir(exist_ok=True)
 PROFILE_AUDIO, PROFILE_TEXT = VOICES / "my_voice.wav", VOICES / "my_voice.txt"
 
 from PySide6.QtCore import Qt, QThread, Signal, QUrl
+from PySide6.QtGui import QIcon
 from PySide6.QtWidgets import (QApplication, QMainWindow, QWidget, QVBoxLayout, QHBoxLayout,
     QGridLayout, QTabWidget, QLabel, QPushButton, QComboBox, QSlider, QTextEdit,
     QFileDialog, QCheckBox, QProgressBar, QScrollArea, QGroupBox, QMessageBox, QFrame)
@@ -359,5 +360,7 @@ class VoxoraWindow(QMainWindow):
 
 def main():
     app=QApplication(sys.argv); app.setApplicationName('Voxora'); app.setOrganizationName('PSP-YN')
-    win=VoxoraWindow(); win.show(); return app.exec()
+    app.setDesktopFileName('voxora')
+    app.setWindowIcon(QIcon(str(ROOT / 'assets/icons/voxora-256.png')))
+    win=VoxoraWindow(); win.setWindowIcon(QIcon(str(ROOT / 'assets/icons/voxora-256.png'))); win.show(); return app.exec()
 if __name__=='__main__': raise SystemExit(main())

@@ -23,7 +23,7 @@
 - Keep request/response payloads serializable and UI-neutral.
 - Capabilities are descriptive, not a promise that a UI control has been implemented. Add a control only when the adapter or a clearly labelled DSP stage performs it.
 - Keep recordings, profiles, model caches and outputs in user data directories in a future installer; never delete them during app upgrades/uninstall by default.
-- Keep `./run.sh` as the default GTK launcher. Do not promote Qt until the feature-parity and native cross-platform validation gates in `docs/PLATFORM_SUPPORT.md` are complete.
+- The Linux Applications-menu entry launches Qt through `./run-qt.sh`; keep `./run.sh` available as the GTK fallback. This local Linux launcher choice does not claim Windows/macOS support; retain the native validation gates in `docs/PLATFORM_SUPPORT.md`.
 
 ## Promotion status
 

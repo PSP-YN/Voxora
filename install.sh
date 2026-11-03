@@ -20,7 +20,7 @@ mkdir -p "$HOME/.local/share/applications"
 for size in 64 128 256 512; do
   icon_dir="$HOME/.local/share/icons/hicolor/${size}x${size}/apps"
   mkdir -p "$icon_dir"
-  install -m 0644 "assets/icons/voxora-${size}.png" "$icon_dir/com.pspyn.Voxora.png"
+  install -m 0644 "assets/icons/voxora-${size}.png" "$icon_dir/voxora.png"
 done
 cat > "$HOME/.local/share/applications/voxora.desktop" <<DESKTOP
 [Desktop Entry]
@@ -29,18 +29,20 @@ Type=Application
 Name=Voxora
 GenericName=Private Voice Cloning Studio
 Comment=Create speech in your own voice, entirely on your device
-Exec=/usr/bin/python3 "$APP_DIR/native_app.py"
+Exec="$APP_DIR/run-qt.sh"
 Path=$APP_DIR
-Icon=com.pspyn.Voxora
+Icon=voxora
 Terminal=false
 Categories=AudioVideo;Audio;
 Keywords=voice;cloning;tts;speech;offline;private;
 StartupNotify=true
-StartupWMClass=com.pspyn.Voxora
+StartupWMClass=voxora
 DESKTOP
-chmod +x "$APP_DIR/run.sh" "$APP_DIR/download_models.py"
+chmod +x "$APP_DIR/run.sh" "$APP_DIR/run-qt.sh" "$APP_DIR/download_models.py"
 update-desktop-database "$HOME/.local/share/applications" 2>/dev/null || true
 gtk-update-icon-cache -f "$HOME/.local/share/icons/hicolor" 2>/dev/null || true
+# Retire the former GTK desktop icon identity; run.sh remains available as a fallback.
+find "$HOME/.local/share/icons/hicolor" -type f -name 'com.pspyn.Voxora.*' -delete
 SKIP_MODEL_DOWNLOAD="${SKIP_MODEL_DOWNLOAD:-0}"
 if [[ "$SKIP_MODEL_DOWNLOAD" != "1" ]]; then
   echo "The three language models require several GB of downloads (Kannada is the largest)."

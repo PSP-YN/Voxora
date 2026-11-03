@@ -84,10 +84,13 @@ class VoxoraWindow(QMainWindow):
         super().__init__(); self.setWindowTitle('Voxora · Private Voice Studio'); self.resize(1420,960)
         self.reference=str(PROFILE_AUDIO) if PROFILE_AUDIO.exists() else ''
         self.output=''; self.worker=None; self.recorder=None
-        self.player=QMediaPlayer(self); self.audio=QAudioOutput(self); self.player.setAudioOutput(self.audio)
-        self.capture_session=QMediaCaptureSession(self); self.audio_input=QAudioInput()
-        self.media_recorder=QMediaRecorder(self); self.capture_session.setAudioInput(self.audio_input)
-        self.capture_session.setRecorder(self.media_recorder)
+        self.player=None; self.audio=None; self.capture_session=None; self.audio_input=None; self.media_recorder=None
+        # Headless widget tests do not initialize native audio device backends.
+        if os.environ.get("VOXORA_HEADLESS_TEST") != "1":
+            self.player=QMediaPlayer(self); self.audio=QAudioOutput(self); self.player.setAudioOutput(self.audio)
+            self.capture_session=QMediaCaptureSession(self); self.audio_input=QAudioInput()
+            self.media_recorder=QMediaRecorder(self); self.capture_session.setAudioInput(self.audio_input)
+            self.capture_session.setRecorder(self.media_recorder)
         self.setStyleSheet(STYLE)
         central=QWidget(); root=QVBoxLayout(central); root.setContentsMargins(22,18,22,18)
         head=QHBoxLayout(); brand=QLabel('VOXORA'); brand.setStyleSheet('font-size:25px;font-weight:900;color:#72f0cb;')
@@ -159,6 +162,8 @@ class VoxoraWindow(QMainWindow):
         path,_=QFileDialog.getOpenFileName(self,'Choose reference audio',str(VOICES),'Audio (*.wav *.mp3 *.flac *.ogg *.m4a *.aac)')
         if path: self.reference=path; self.ref_label.setText(path)
     def toggle_recording(self):
+        if self.media_recorder is None:
+            self.status.setText("Audio capture is disabled in headless test mode."); return
         if self.media_recorder.recorderState() == QMediaRecorder.RecorderState.RecordingState:
             self.media_recorder.stop()
             self.reference=self.recording_path
@@ -218,7 +223,7 @@ class VoxoraWindow(QMainWindow):
             a=result.get('analysis',{}); self.analysis.setText(json.dumps(a,indent=2)); self.status.setText('Speaker analysis complete and saved locally.'); self.refresh_profile()
         else: self.status.setText('Error: '+result.get('message','Unknown inference error'))
     def play_output(self):
-        if not self.output: return
+        if not self.output or self.player is None: return
         if self.player.source().isEmpty() or self.player.source().toLocalFile()!=self.output: self.player.setSource(QUrl.fromLocalFile(self.output))
         if self.player.playbackState()==QMediaPlayer.PlaybackState.PlayingState: self.player.pause()
         else: self.player.play()
@@ -234,8 +239,9 @@ class VoxoraWindow(QMainWindow):
             b.clicked.connect(lambda checked=False,p=path:self.open_library_file(p)); self.library.addWidget(b)
     def open_library_file(self,path): self.output=str(path); self.play_btn.setEnabled(True); self.export_btn.setEnabled(True); self.tabs.setCurrentIndex(0); self.play_output()
     def closeEvent(self,event):
-        if self.media_recorder.recorderState()==QMediaRecorder.RecorderState.RecordingState: self.media_recorder.stop()
-        self.player.stop(); super().closeEvent(event)
+        if self.media_recorder is not None and self.media_recorder.recorderState()==QMediaRecorder.RecorderState.RecordingState: self.media_recorder.stop()
+        if self.player is not None: self.player.stop()
+        super().closeEvent(event)
 
 def main():
     app=QApplication(sys.argv); app.setApplicationName('Voxora'); app.setOrganizationName('PSP-YN')

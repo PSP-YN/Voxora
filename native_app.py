@@ -648,23 +648,29 @@ class VoiceStudio(Adw.Application):
 
     def run_backend(self, payload):
         try:
+            # Merge stderr into stdout so the UI drains one pipe. Reading stdout
+            # while leaving stderr unread can deadlock if model logs fill the pipe.
             proc = subprocess.Popen([str(PYTHON), str(BACKEND)],
                 cwd=str(ROOT), stdin=subprocess.PIPE, stdout=subprocess.PIPE,
-                stderr=subprocess.PIPE, text=True, bufsize=1)
+                stderr=subprocess.STDOUT, text=True, bufsize=1)
             proc.stdin.write(json.dumps(payload, ensure_ascii=False))
             proc.stdin.close()
             events = []
+            diagnostics = []
             for line in proc.stdout:
                 try:
                     event = json.loads(line.strip())
-                    events.append(event)
-                    GLib.idle_add(self.set_status, event.get("message", "Working…"))
+                    if isinstance(event, dict) and "stage" in event:
+                        events.append(event)
+                        GLib.idle_add(self.set_status, event.get("message", "Working…"))
+                    else:
+                        diagnostics.append(line)
                 except json.JSONDecodeError:
-                    pass
-            stderr = proc.stderr.read()
+                    diagnostics.append(line)
             code = proc.wait()
-            if stderr:
-                (LOGS / "last-generation.log").write_text(stderr[-30000:], encoding="utf-8")
+            if diagnostics:
+                (LOGS / "last-generation.log").write_text(
+                    "".join(diagnostics)[-30000:], encoding="utf-8")
             result = events[-1] if events else {"stage":"error","message":"The inference worker returned no result. Check logs/last-generation.log."}
             if code != 0 and result.get("stage") != "error":
                 result = {"stage":"error","message":"Generation process failed. Check logs/last-generation.log."}
